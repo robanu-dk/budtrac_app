@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:moneytracker/pages/home.dart';
+import 'package:moneytracker/pages/profile.dart';
 
 class HistoryPage extends StatelessWidget {
   List<Map<String, dynamic>> database = [
@@ -77,85 +79,146 @@ class HistoryPage extends StatelessWidget {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-          appBar: AppBar(
-            title: Text(
-              'History',
-              style: TextStyle(fontSize: 24),
-            ),
-            centerTitle: false,
-            backgroundColor: Colors.pink[800],
-            bottom: TabBar(
-              indicatorWeight: 0.5,
-              tabs: [
-                Tab(
-                  icon: Icon(Icons.all_inbox_outlined),
-                  text: 'All',
-                ),
-                Tab(
-                  icon: Icon(Icons.money),
-                  text: 'Income',
-                ),
-                Tab(
-                  icon: Icon(Icons.money_off),
-                  text: 'Outcome',
-                )
-              ],
-              indicator: BoxDecoration(color: Color.fromARGB(255, 235, 28, 97)),
-              // leading: IconButton(icon: Icons.home, onPressed: null),
-              // leading: IconButton(onPressed: () {}, icon: Icon(Icons.home)),
-            ),
-            actions: [
-              Container(
-                width: 55,
-                child: Icon(Icons.filter_alt_sharp),
+        appBar: AppBar(
+          title: Text(
+            'History',
+            style: TextStyle(fontSize: 24),
+          ),
+          centerTitle: false,
+          backgroundColor: Colors.pink[800],
+          bottom: TabBar(
+            indicatorWeight: 0.5,
+            tabs: [
+              Tab(
+                icon: Icon(Icons.all_inbox_outlined),
+                text: 'All',
+              ),
+              Tab(
+                icon: Icon(Icons.money),
+                text: 'Income',
+              ),
+              Tab(
+                icon: Icon(Icons.money_off),
+                text: 'Outcome',
               )
             ],
+            indicator: BoxDecoration(color: Color.fromARGB(255, 235, 28, 97)),
+            // leading: IconButton(icon: Icons.home, onPressed: null),
+            // leading: IconButton(onPressed: () {}, icon: Icon(Icons.home)),
           ),
-          body: TabBarView(children: [
-            ListView(
-              children: database.map((data) {
-                return Column(
+          actions: [
+            Container(
+              width: 55,
+              child: Icon(Icons.filter_alt_sharp),
+            )
+          ],
+        ),
+        body: TabBarView(children: [
+          ListView(
+            children: database.map((data) {
+              return Column(
+                children: [
+                  History(data["title"], data["image"], data["date"],
+                      data["income"]),
+                  HistoryBar()
+                ],
+              );
+            }).toList(),
+          ),
+          ListView(
+            children: database.map((data) {
+              return Column(
+                children: [
+                  if (data['income'])
+                    Column(
+                      children: [
+                        History(data["title"], data["image"], data["date"],
+                            data["income"]),
+                        HistoryBar()
+                      ],
+                    )
+                ],
+              );
+            }).toList(),
+          ),
+          ListView(
+            children: database.map((data) {
+              return Column(
+                children: [
+                  if (!data['income'])
+                    Column(
+                      children: [
+                        History(data["title"], data["image"], data["date"],
+                            data["income"]),
+                        HistoryBar()
+                      ],
+                    )
+                ],
+              );
+            }).toList(),
+          ),
+        ]),
+        persistentFooterButtons: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextButton(
+                onPressed: () => Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Homepage(),
+                    )),
+                child: Column(
                   children: [
-                    History(data["title"], data["image"], data["date"],
-                        data["income"]),
-                    HistoryBar()
+                    Icon(
+                      Icons.home,
+                      color: Colors.grey[850],
+                    ),
+                    Text(
+                      "Home",
+                      style: TextStyle(color: Colors.grey[850]),
+                    )
                   ],
-                );
-              }).toList(),
-            ),
-            ListView(
-              children: database.map((data) {
-                return Column(
-                  children: [
-                    if (data['income'])
-                      Column(
-                        children: [
-                          History(data["title"], data["image"], data["date"],
-                              data["income"]),
-                          HistoryBar()
-                        ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 80, left: 80),
+                child: TextButton(
+                  onPressed: () => null,
+                  child: Column(
+                    children: [
+                      Icon(
+                        Icons.history,
+                        color: Colors.pink[800],
+                      ),
+                      Text(
+                        "History",
+                        style: TextStyle(color: Colors.pink[800]),
                       )
-                  ],
-                );
-              }).toList(),
-            ),
-            ListView(
-              children: database.map((data) {
-                return Column(
+                    ],
+                  ),
+                ),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: ((context) => ProfilePage()))),
+                child: Column(
                   children: [
-                    if (!data['income'])
-                      Column(
-                        children: [
-                          History(data["title"], data["image"], data["date"],
-                              data["income"]),
-                          HistoryBar()
-                        ],
-                      )
+                    CircleAvatar(
+                      backgroundImage: AssetImage("images/profile.png"),
+                      radius: 12,
+                    ),
+                    Text(
+                      "Profile",
+                      style: TextStyle(color: Colors.grey[850]),
+                    )
                   ],
-                );
-              }).toList(),
-            ),
-          ])),
+                ),
+              )
+            ],
+          )
+        ],
+      ),
     );
   }
 }
