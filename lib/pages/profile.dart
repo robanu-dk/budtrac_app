@@ -27,66 +27,38 @@ class ProfilePage extends StatelessWidget {
           )
         ]),
       ),
-      persistentFooterButtons: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextButton(
-              onPressed: () => Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => Homepage(),
-                  )),
-              child: Column(
-                children: [
-                  Icon(
-                    Icons.home,
-                    color: Colors.grey[850],
-                  ),
-                  Text(
-                    "Home",
-                    style: TextStyle(color: Colors.grey[850]),
-                  )
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(right: 80, left: 80),
-              child: TextButton(
-                onPressed: () => Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: ((context) => HistoryPage()))),
-                child: Column(
-                  children: [
-                    Icon(
-                      Icons.history,
-                      color: Colors.grey[850],
-                    ),
-                    Text(
-                      "History",
-                      style: TextStyle(color: Colors.grey[850]),
-                    )
-                  ],
+      bottomNavigationBar: BottomNavigationBar(
+          selectedItemColor: Colors.pink[800],
+          onTap: ((value) {
+            switch (value) {
+              case 0:
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Homepage(),
+                    ));
+                break;
+              case 1:
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => HistoryPage(),
+                    ));
+                break;
+            }
+          }),
+          currentIndex: 2,
+          items: [
+            BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.history), label: "History"),
+            BottomNavigationBarItem(
+                icon: CircleAvatar(
+                  backgroundImage: AssetImage('images/profile.png'),
+                  radius: 12,
                 ),
-              ),
-            ),
-            TextButton(
-              onPressed: () => null,
-              child: Column(
-                children: [
-                  CircleAvatar(
-                    backgroundImage: AssetImage("images/profile.png"),
-                    radius: 12,
-                  ),
-                  Text(
-                    "Profile",
-                    style: TextStyle(color: Colors.pink[800]),
-                  )
-                ],
-              ),
-            )
-          ],
-        )
-      ],
+                label: "Profile"),
+          ]),
     );
   }
 }

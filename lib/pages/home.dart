@@ -46,63 +46,38 @@ class Homepage extends StatelessWidget {
           child: Icon(Icons.add),
         ),
       ),
-      persistentFooterButtons: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextButton(
-              onPressed: () {},
-              child: Column(
-                children: [
-                  Icon(
-                    Icons.home,
-                    color: Colors.pink[800],
-                  ),
-                  Text(
-                    "Home",
-                    style: TextStyle(color: Colors.pink[800]),
-                  )
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(right: 80, left: 80),
-              child: TextButton(
-                onPressed: () => Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: ((context) => HistoryPage()))),
-                child: Column(
-                  children: [
-                    Icon(
-                      Icons.history,
-                      color: Colors.grey[850],
-                    ),
-                    Text(
-                      "History",
-                      style: TextStyle(color: Colors.grey[850]),
-                    )
-                  ],
+      bottomNavigationBar: BottomNavigationBar(
+          selectedItemColor: Colors.pink[800],
+          onTap: ((value) {
+            switch (value) {
+              case 1:
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => HistoryPage(),
+                    ));
+                break;
+              case 2:
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProfilePage(),
+                    ));
+                break;
+            }
+          }),
+          currentIndex: 0,
+          items: [
+            BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.history), label: "History"),
+            BottomNavigationBarItem(
+                icon: CircleAvatar(
+                  backgroundImage: AssetImage('images/profile.png'),
+                  radius: 12,
                 ),
-              ),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: ((context) => ProfilePage()))),
-              child: Column(
-                children: [
-                  CircleAvatar(
-                    backgroundImage: AssetImage("images/profile.png"),
-                    radius: 12,
-                  ),
-                  Text(
-                    "Profile",
-                    style: TextStyle(color: Colors.grey[850]),
-                  )
-                ],
-              ),
-            )
-          ],
-        )
-      ],
+                label: "Profile"),
+          ]),
     );
   }
 }
