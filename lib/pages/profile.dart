@@ -19,11 +19,11 @@ class ProfilePage extends StatelessWidget {
         child: Column(children: [
           Container(
             height: 400,
-            color: Colors.red,
+            // color: Colors.red,
           ),
           Container(
             height: 400,
-            color: Colors.blue,
+            // color: Colors.blue,
           )
         ]),
       ),

@@ -12,7 +12,7 @@ class Homepage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.pink[900],
+        backgroundColor: Colors.pink[800],
         title: Text(
           "BudTrac",
           style: TextStyle(fontFamily: 'EBGaramond', fontSize: 26),
@@ -21,21 +21,21 @@ class Homepage extends StatelessWidget {
       body: ListView(children: [
         Container(
           height: 190,
-          color: Colors.pink[800],
+          // color: Colors.pink[800],
         ),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
-            // crossAxisAlignment: CrossAxisAlignment.end,
-            children: [Fitur(), Fitur()],
-          ),
+              // crossAxisAlignment: CrossAxisAlignment.end,
+              // children: [Fitur(), Fitur()],
+              ),
         ),
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
-            // crossAxisAlignment: CrossAxisAlignment.end,
-            children: [Fitur(), Fitur()],
-          ),
+              // crossAxisAlignment: CrossAxisAlignment.end,
+              // children: [Fitur(), Fitur()],
+              ),
         )
       ]),
       floatingActionButton: Padding(

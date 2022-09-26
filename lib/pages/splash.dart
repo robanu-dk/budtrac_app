@@ -30,12 +30,36 @@ class _SplashPageState extends State<SplashPage> {
     return Scaffold(
       backgroundColor: Colors.pink[800],
       body: Center(
-        child: Container(
-            width: 270,
-            height: 270,
-            child: Image(
-              image: AssetImage('images/gif logo.gif'),
-            )),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 270,
+              height: 270,
+              child: Image(
+                image: AssetImage('images/gif logo.gif'),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 12),
+              child: Text(
+                'BudTrac',
+                style: TextStyle(
+                    fontFamily: 'EBGaramond',
+                    fontSize: 40,
+                    color: Colors.white),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 2),
+              child: Text(
+                "\"Budget Tracks - Expense Tracker\"",
+                style: TextStyle(
+                    fontFamily: 'Times', fontSize: 18, color: Colors.white),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
