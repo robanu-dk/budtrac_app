@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:moneytracker/pages/home.dart';
-import 'package:moneytracker/pages/profile.dart';
+import '../navigation/bottom_navigation.dart';
 
 class HistoryPage extends StatelessWidget {
   List<Map<String, dynamic>> database = [
@@ -79,118 +78,86 @@ class HistoryPage extends StatelessWidget {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'History',
-            style: TextStyle(fontSize: 24),
-          ),
-          centerTitle: false,
-          backgroundColor: Colors.pink[800],
-          bottom: TabBar(
-            indicatorWeight: 0.5,
-            tabs: [
-              Tab(
-                icon: Icon(Icons.all_inbox_outlined),
-                text: 'All',
-              ),
-              Tab(
-                icon: Icon(Icons.money),
-                text: 'Income',
-              ),
-              Tab(
-                icon: Icon(Icons.money_off),
-                text: 'Outcome',
+          appBar: AppBar(
+            title: Text(
+              'History',
+              style: TextStyle(fontSize: 24),
+            ),
+            centerTitle: false,
+            backgroundColor: Colors.pink[800],
+            bottom: TabBar(
+              indicatorWeight: 0.5,
+              tabs: [
+                Tab(
+                  icon: Icon(Icons.all_inbox_outlined),
+                  text: 'All',
+                ),
+                Tab(
+                  icon: Icon(Icons.money),
+                  text: 'Income',
+                ),
+                Tab(
+                  icon: Icon(Icons.money_off),
+                  text: 'Outcome',
+                )
+              ],
+              indicator: BoxDecoration(color: Color.fromARGB(255, 235, 28, 97)),
+              // leading: IconButton(icon: Icons.home, onPressed: null),
+              // leading: IconButton(onPressed: () {}, icon: Icon(Icons.home)),
+            ),
+            actions: [
+              Container(
+                width: 55,
+                child: Icon(Icons.filter_alt_sharp),
               )
             ],
-            indicator: BoxDecoration(color: Color.fromARGB(255, 235, 28, 97)),
-            // leading: IconButton(icon: Icons.home, onPressed: null),
-            // leading: IconButton(onPressed: () {}, icon: Icon(Icons.home)),
           ),
-          actions: [
-            Container(
-              width: 55,
-              child: Icon(Icons.filter_alt_sharp),
-            )
-          ],
-        ),
-        body: TabBarView(children: [
-          ListView(
-            children: database.map((data) {
-              return Column(
-                children: [
-                  History(data["title"], data["image"], data["date"],
-                      data["income"]),
-                  HistoryBar()
-                ],
-              );
-            }).toList(),
-          ),
-          ListView(
-            children: database.map((data) {
-              return Column(
-                children: [
-                  if (data['income'])
-                    Column(
-                      children: [
-                        History(data["title"], data["image"], data["date"],
-                            data["income"]),
-                        HistoryBar()
-                      ],
-                    )
-                ],
-              );
-            }).toList(),
-          ),
-          ListView(
-            children: database.map((data) {
-              return Column(
-                children: [
-                  if (!data['income'])
-                    Column(
-                      children: [
-                        History(data["title"], data["image"], data["date"],
-                            data["income"]),
-                        HistoryBar()
-                      ],
-                    )
-                ],
-              );
-            }).toList(),
-          ),
-        ]),
-        bottomNavigationBar: BottomNavigationBar(
-            selectedItemColor: Colors.pink[800],
-            onTap: ((value) {
-              switch (value) {
-                case 0:
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => Homepage(),
-                      ));
-                  break;
-                case 2:
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ProfilePage(),
-                      ));
-                  break;
-              }
-            }),
-            currentIndex: 1,
-            items: [
-              BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.history), label: "History"),
-              BottomNavigationBarItem(
-                  icon: CircleAvatar(
-                    backgroundImage: AssetImage('images/profile.png'),
-                    radius: 12,
-                  ),
-                  label: "Profile"),
-            ]),
-      ),
+          body: TabBarView(children: [
+            ListView(
+              children: database.map((data) {
+                return Column(
+                  children: [
+                    History(data["title"], data["image"], data["date"],
+                        data["income"]),
+                    HistoryBar()
+                  ],
+                );
+              }).toList(),
+            ),
+            ListView(
+              children: database.map((data) {
+                return Column(
+                  children: [
+                    if (data['income'])
+                      Column(
+                        children: [
+                          History(data["title"], data["image"], data["date"],
+                              data["income"]),
+                          HistoryBar()
+                        ],
+                      )
+                  ],
+                );
+              }).toList(),
+            ),
+            ListView(
+              children: database.map((data) {
+                return Column(
+                  children: [
+                    if (!data['income'])
+                      Column(
+                        children: [
+                          History(data["title"], data["image"], data["date"],
+                              data["income"]),
+                          HistoryBar()
+                        ],
+                      )
+                  ],
+                );
+              }).toList(),
+            ),
+          ]),
+          bottomNavigationBar: BottomNavigation(1)),
     );
   }
 }

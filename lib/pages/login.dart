@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:moneytracker/pages/regist.dart';
 import './home.dart';
+import './regist.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -126,7 +128,12 @@ class _MyWidgetState extends State<LoginPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text("Don't have account?"),
-                      TextButton(onPressed: () {}, child: Text("Sign in"))
+                      TextButton(
+                          onPressed: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => RegistPage())),
+                          child: Text("Sign in"))
                     ],
                   ),
                   Padding(
