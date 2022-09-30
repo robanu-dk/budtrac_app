@@ -19,7 +19,7 @@ class _SplashPageState extends State<SplashPage> {
     // TODO: implement initState
     super.initState();
     Timer(
-        Duration(seconds: 4),
+        Duration(seconds: 8),
         () => Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => LoginPage())));
     // Timer(Duration(seconds: 4), () => runApp(LoginPage()));

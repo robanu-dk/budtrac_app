@@ -35,46 +35,54 @@ class _ProfilePageState extends State<ProfilePage> {
                   borderRadius: BorderRadius.all(Radius.circular(4)),
                   side: BorderSide(color: Colors.grey.shade400)),
               child: Container(
-                  height: 170,
-                  child: Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10),
+                height: 170,
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10))),
+                        shadowColor: Colors.white,
+                        color: Colors.grey.shade400,
                         child: IconButton(
-                            splashRadius: 70,
+                            splashRadius: 10,
                             iconSize: 120,
                             onPressed: () {
                               _change_image ? print('change') : null;
                             },
-                            icon: CircleAvatar(
-                              radius: 120,
-                              backgroundImage:
-                                  AssetImage('${profile['image_profile']}'),
+                            icon: ClipRRect(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
+                              child: Image.asset('${profile['image_profile']}'),
                             )),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 40, left: 10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              '${profile['firstname'] + ' ' + profile['lastname']}',
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 40, left: 10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${profile['firstname'] + ' ' + profile['lastname']}',
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10),
+                            child: Text(
+                              '${profile['email']}',
                               style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold),
+                                  fontSize: 16, color: Colors.grey.shade600),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 10),
-                              child: Text(
-                                '${profile['email']}',
-                                style: TextStyle(
-                                    fontSize: 16, color: Colors.grey.shade600),
-                              ),
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  )),
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
             ),
             Card(
               margin: EdgeInsets.only(top: 8, left: 3, right: 3),
@@ -83,38 +91,75 @@ class _ProfilePageState extends State<ProfilePage> {
                   side: BorderSide(color: Colors.grey.shade400)),
               child: Container(
                 height: 330,
-                child: Column(children: [
-                  TextButton(
-                      onPressed: () {
-                        if (_edit) {
-                          setState(() {
-                            _edit = false;
-                            _edit_icon = Icon(Icons.edit);
-                            _edit_text = 'Edit';
-                          });
-                        } else {
-                          setState(() {
-                            _edit = true;
-                            _edit_icon = Icon(Icons.save);
-                            _edit_text = 'Save';
-                          });
-                        }
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            _edit_icon,
-                            Text(
-                              _edit_text,
-                              style: TextStyle(fontSize: 16),
-                            )
-                          ],
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.all(10),
+                        width: 100,
+                        child: TextButton(
+                          onPressed: () {
+                            if (_edit) {
+                              setState(() {
+                                _edit = false;
+                                _edit_icon = Icon(Icons.edit);
+                                _edit_text = 'Edit';
+                              });
+                            } else {
+                              setState(() {
+                                _edit = true;
+                                _edit_icon = Icon(Icons.save);
+                                _edit_text = 'Save';
+                              });
+                            }
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              _edit_icon,
+                              Text(
+                                _edit_text,
+                                style: TextStyle(fontSize: 16),
+                              )
+                            ],
+                          ),
                         ),
-                      )),
-                  TextField()
-                ]),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 175,
+                            child: TextField(
+                              enabled: _edit,
+                              autocorrect: false,
+                              decoration: InputDecoration(
+                                focusedBorder: OutlineInputBorder(),
+                                border: _edit
+                                    ? UnderlineInputBorder()
+                                    : InputBorder.none,
+                                labelText: "Firstname",
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: 20,
+                          ),
+                          Container(
+                            width: 175,
+                            child: TextField(
+                              enabled: _edit,
+                              autocorrect: false,
+                              decoration: InputDecoration(
+                                  border: _edit
+                                      ? UnderlineInputBorder()
+                                      : InputBorder.none,
+                                  labelText: "Lastname"),
+                            ),
+                          ),
+                        ],
+                      )
+                    ]),
               ),
             ),
           ]),

@@ -133,7 +133,7 @@ class _MyWidgetState extends State<LoginPage> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => RegistPage())),
-                          child: Text("Sign in"))
+                          child: Text("Sign up"))
                     ],
                   ),
                   Padding(
