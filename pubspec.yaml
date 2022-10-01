@@ -30,6 +30,7 @@ dependencies:
   flutter:
     sdk: flutter
   intl: ^0.17.0 # Date Format with intl => DateFormat() 
+  curved_navigation_bar: ^1.0.3 # Curved Navigation Bottom Bar for navigationbottombar
 
 
   # The following adds the Cupertino Icons font to your application.

@@ -1,3 +1,4 @@
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import '../pages/profile.dart';
 import '../pages/home.dart';
@@ -10,40 +11,55 @@ class BottomNavigation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BottomNavigationBar(
-        selectedItemColor: Colors.pink[800],
-        onTap: ((value) {
+    return CurvedNavigationBar(
+        onTap: (value) {
           switch (value) {
             case 0:
               Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => Homepage(),
-                  ));
+                  context, MaterialPageRoute(builder: (context) => Homepage()));
               break;
             case 1:
-              Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => HistoryPage(),
-                  ));
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => HistoryPage()));
               break;
             case 2:
               Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: ((context) => ProfilePage())));
+                  MaterialPageRoute(builder: (context) => ProfilePage()));
               break;
           }
-        }),
-        currentIndex: this.currentIndex,
+        },
+        height: 60.0,
+        animationCurve: Curves.linear,
+        buttonBackgroundColor: Colors.grey[200],
+        backgroundColor: Colors.pink.shade800,
+        index: this.currentIndex,
         items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(icon: Icon(Icons.history), label: "History"),
-          BottomNavigationBarItem(
-              icon: CircleAvatar(
-                backgroundImage: AssetImage('images/profile.png'),
-                radius: 12,
-              ),
-              label: "Profile"),
+          NavigationIcon(Icons.home, "Home"),
+          NavigationIcon(Icons.history, "History"),
+          NavigationIcon(Icons.person, "Profile"),
         ]);
+  }
+}
+
+class NavigationIcon extends StatelessWidget {
+  IconData icon;
+  String label;
+  NavigationIcon(this.icon, this.label);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(
+          this.icon,
+          size: 30,
+        ),
+        Text(
+          this.label,
+          style: TextStyle(fontSize: 16),
+        )
+      ],
+    );
   }
 }
