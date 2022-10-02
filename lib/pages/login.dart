@@ -72,7 +72,7 @@ class _MyWidgetState extends State<LoginPage> {
                       decoration: InputDecoration(
                           focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(30)),
-                          prefixIcon: Icon(Icons.person),
+                          prefixIcon: Icon(Icons.email),
                           labelText: "Email"),
                     ),
                   ),

@@ -46,10 +46,10 @@ class _ProfilePageState extends State<ProfilePage> {
                             borderRadius:
                                 BorderRadius.all(Radius.circular(10))),
                         shadowColor: Colors.black,
-                        color: Color.fromARGB(255, 191, 190, 190),
+                        color: Color.fromARGB(50, 0, 0, 0),
                         child: IconButton(
                             padding: EdgeInsets.only(
-                                left: 1, right: 3, bottom: 3, top: 1),
+                                left: 2, right: 2, bottom: 2, top: 2),
                             splashRadius: 10,
                             iconSize: 120,
                             onPressed: () {
