@@ -80,6 +80,12 @@ flutter:
     - family: EBGaramond
       fonts:
         - asset: fonts/EBGaramond-Bold.ttf
+    - family: OpenSans
+      fonts:
+        - asset: fonts/OpenSans-Regular.ttf
+    - family: DoppioOne
+      fonts:
+        - asset: fonts/DoppioOne-Regular.ttf
   #   - family: Schyler
   #     fonts:
   #       - asset: fonts/Schyler-Regular.ttf

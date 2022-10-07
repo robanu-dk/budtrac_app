@@ -160,7 +160,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     ? UnderlineInputBorder()
                                     : InputBorder.none,
                                 label: Text(
-                                  "Firstname",
+                                  "First Name",
                                   style: TextStyle(fontSize: 22),
                                 ),
                               ),
@@ -195,7 +195,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     ? UnderlineInputBorder()
                                     : InputBorder.none,
                                 label: Text(
-                                  "Lastname",
+                                  "Last Name",
                                   style: TextStyle(fontSize: 22),
                                 ),
                               ),

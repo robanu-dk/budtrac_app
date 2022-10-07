@@ -134,7 +134,7 @@ class _RegistPageState extends State<RegistPage> {
                         obscureText: _hide2,
                         keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
-                            label: Text('Password'),
+                            label: Text('Retype Password'),
                             labelStyle: TextStyle(fontSize: 16),
                             focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.lightBlue),

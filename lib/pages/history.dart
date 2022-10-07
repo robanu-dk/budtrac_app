@@ -102,13 +102,12 @@ class HistoryPage extends StatelessWidget {
                 )
               ],
               indicator: BoxDecoration(color: Color.fromARGB(255, 235, 28, 97)),
-              // leading: IconButton(icon: Icons.home, onPressed: null),
-              // leading: IconButton(onPressed: () {}, icon: Icon(Icons.home)),
             ),
             actions: [
               Container(
                 width: 55,
-                child: Icon(Icons.filter_alt_sharp),
+                child: IconButton(
+                    onPressed: () {}, icon: Icon(Icons.filter_alt_sharp)),
               )
             ],
           ),
