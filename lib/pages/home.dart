@@ -25,7 +25,7 @@ class _HomepageState extends State<Homepage> {
           Padding(
             padding: EdgeInsets.only(top: 20),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Card(
                   color: income ? Colors.pink[800] : Colors.white,
@@ -51,7 +51,6 @@ class _HomepageState extends State<Homepage> {
                     ),
                   ),
                 ),
-                Padding(padding: EdgeInsets.only(left: 5)),
                 Card(
                   color: income ? Colors.white : Colors.pink[800],
                   shape: RoundedRectangleBorder(
@@ -98,11 +97,10 @@ class _HomepageState extends State<Homepage> {
                   children: [
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         MoneyValue((income ? 'Rp 200.000' : 'Rp 100.000'),
                             'Today\'s ' + (income ? 'funds' : 'expenses')),
-                        Padding(padding: EdgeInsets.only(right: 20)),
                         MoneyValue((income ? 'Rp 60.000' : 'Rp 30.000'),
                             'Average daily ' + (income ? 'funds' : 'expenses')),
                       ],
@@ -152,11 +150,101 @@ class _HomepageState extends State<Homepage> {
           padding: const EdgeInsets.only(bottom: 8, right: 10),
           child: FloatingActionButton(
             backgroundColor: Colors.pink[800],
-            onPressed: () {},
+            onPressed: () {
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return ModalInput();
+                  });
+            },
             child: Icon(Icons.add),
           ),
         ),
         bottomNavigationBar: BottomNavigation(0));
+  }
+}
+
+class ModalInput extends StatelessWidget {
+  const ModalInput({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(50))),
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height * 0.5,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              'INPUT',
+              style: TextStyle(
+                  fontFamily: "DoppioOne",
+                  fontSize: 28,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.pink[800]),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                InputMenu(Icons.money, "Income", Homepage()),
+                InputMenu(Icons.money_off, "Outcome", Homepage()),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                InputMenu(Icons.savings, "Set Target", Homepage()),
+                InputMenu(Icons.shopping_bag, "Set Limit", Homepage()),
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class InputMenu extends StatelessWidget {
+  IconData icon;
+  String label;
+  Widget destination;
+  InputMenu(this.icon, this.label, this.destination);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      shape: RoundedRectangleBorder(
+          side: BorderSide(color: Colors.grey.shade300),
+          borderRadius: BorderRadius.all(Radius.circular(20))),
+      child: Container(
+        width: 120,
+        height: 120,
+        child: IconButton(
+          splashRadius: 75,
+          onPressed: () => Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) => this.destination)),
+          icon: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+            Icon(
+              this.icon,
+              size: 50,
+            ),
+            Text(
+              this.label,
+              style: TextStyle(
+                  fontSize: 20,
+                  fontFamily: "DoppioOne",
+                  fontWeight: FontWeight.w400),
+            )
+          ]),
+        ),
+      ),
+    );
   }
 }
 
