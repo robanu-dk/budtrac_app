@@ -14,6 +14,7 @@ class _HomepageState extends State<Homepage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           backgroundColor: Colors.pink[800],
           title: Text(
             "BudTrac",
@@ -30,7 +31,8 @@ class _HomepageState extends State<Homepage> {
                 Card(
                   color: income ? Colors.pink[800] : Colors.white,
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(15))),
+                      borderRadius: BorderRadius.all(Radius.circular(15)),
+                      side: BorderSide(color: Colors.grey.shade300)),
                   child: Container(
                     width: MediaQuery.of(context).size.width * 0.45,
                     child: IconButton(
@@ -54,7 +56,8 @@ class _HomepageState extends State<Homepage> {
                 Card(
                   color: income ? Colors.white : Colors.pink[800],
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(15))),
+                      borderRadius: BorderRadius.all(Radius.circular(15)),
+                      side: BorderSide(color: Colors.grey.shade300)),
                   child: Container(
                     width: MediaQuery.of(context).size.width * 0.45,
                     child: IconButton(
@@ -91,7 +94,7 @@ class _HomepageState extends State<Homepage> {
                   side: BorderSide(color: Colors.grey.shade300)),
               color: Colors.grey[100],
               child: Container(
-                height: 115,
+                height: 100,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -119,7 +122,7 @@ class _HomepageState extends State<Homepage> {
               color: Colors.grey[100],
               child: Container(
                 padding: EdgeInsets.only(right: 10, left: 10),
-                height: 115,
+                height: 100,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -127,7 +130,7 @@ class _HomepageState extends State<Homepage> {
                       income ? "Target" : "Limit",
                       style: TextStyle(
                           fontFamily: "DoppioOne",
-                          fontSize: 24,
+                          fontSize: 22,
                           fontWeight: FontWeight.w400,
                           color: Colors.pink[800]),
                     ),
@@ -152,10 +155,11 @@ class _HomepageState extends State<Homepage> {
             backgroundColor: Colors.pink[800],
             onPressed: () {
               showDialog(
-                  context: context,
-                  builder: (context) {
-                    return ModalInput();
-                  });
+                context: context,
+                builder: (context) {
+                  return ModalInput();
+                },
+              );
             },
             child: Icon(Icons.add),
           ),
@@ -182,7 +186,7 @@ class ModalInput extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              'INPUT',
+              'ADD DATA',
               style: TextStyle(
                   fontFamily: "DoppioOne",
                   fontSize: 28,
@@ -219,6 +223,7 @@ class InputMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: Color.fromARGB(164, 228, 204, 210),
       shape: RoundedRectangleBorder(
           side: BorderSide(color: Colors.grey.shade300),
           borderRadius: BorderRadius.all(Radius.circular(20))),
@@ -233,13 +238,15 @@ class InputMenu extends StatelessWidget {
             Icon(
               this.icon,
               size: 50,
+              color: Colors.pink[800],
             ),
             Text(
               this.label,
               style: TextStyle(
                   fontSize: 20,
                   fontFamily: "DoppioOne",
-                  fontWeight: FontWeight.w400),
+                  fontWeight: FontWeight.w400,
+                  color: Colors.pink[800]),
             )
           ]),
         ),
@@ -262,7 +269,7 @@ class MoneyValue extends StatelessWidget {
             this.value,
             style: TextStyle(
                 fontFamily: "DoppioOne",
-                fontSize: 24,
+                fontSize: 20,
                 color: Colors.pink[800],
                 fontWeight: FontWeight.w400),
             maxLines: 2,
@@ -271,7 +278,7 @@ class MoneyValue extends StatelessWidget {
             this.keterangan,
             style: TextStyle(
                 fontFamily: "OpenSans",
-                fontSize: 20,
+                fontSize: 16,
                 fontWeight: FontWeight.w400),
             maxLines: 2,
             textAlign: TextAlign.center,
@@ -294,7 +301,7 @@ class CardTotalIncomeOutcome extends StatelessWidget {
           borderRadius: BorderRadius.all(Radius.circular(15))),
       color: Colors.pink[700],
       child: Container(
-        height: 180,
+        height: 150,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -302,7 +309,7 @@ class CardTotalIncomeOutcome extends StatelessWidget {
               income ? this.incomeTotal : this.outcomeTotal,
               style: TextStyle(
                 fontFamily: "DoppioOne",
-                fontSize: 40,
+                fontSize: 35,
                 fontWeight: FontWeight.w400,
                 color: Colors.white,
               ),
@@ -312,7 +319,7 @@ class CardTotalIncomeOutcome extends StatelessWidget {
               "This monthly total " + (this.income ? "funds" : "expenses"),
               style: TextStyle(
                 fontFamily: "OpenSans",
-                fontSize: 20,
+                fontSize: 18,
                 fontWeight: FontWeight.w400,
                 color: Colors.white,
               ),

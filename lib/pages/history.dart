@@ -79,6 +79,7 @@ class HistoryPage extends StatelessWidget {
       length: 3,
       child: Scaffold(
           appBar: AppBar(
+            automaticallyImplyLeading: false,
             title: Text(
               'History',
               style: TextStyle(fontSize: 24),
