@@ -31,6 +31,9 @@ dependencies:
     sdk: flutter
   intl: ^0.17.0 # Date Format with intl => DateFormat() 
   curved_navigation_bar: ^1.0.3 # Curved Navigation Bottom Bar for navigationbottombar
+  country_icons: ^2.0.2 # Country's flag icon
+  currency_picker: ^2.0.12 # Currency Picker for country
+  list_picker: ^1.0.0 # List Picker, Pick from a list
 
 
   # The following adds the Cupertino Icons font to your application.

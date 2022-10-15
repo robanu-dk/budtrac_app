@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import '../navigation/bottom_navigation.dart';
+import '../pages/income.dart';
+import '../pages/outcome.dart';
+import '../pages/limit.dart';
+import '../pages/target.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({Key? key}) : super(key: key);
@@ -186,7 +190,7 @@ class ModalInput extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              'ADD DATA',
+              'Add Data',
               style: TextStyle(
                   fontFamily: "DoppioOne",
                   fontSize: 28,
@@ -196,15 +200,15 @@ class ModalInput extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                InputMenu(Icons.money, "Income", Homepage()),
-                InputMenu(Icons.money_off, "Outcome", Homepage()),
+                InputMenu(Icons.money, "Income", InputIncomePage()),
+                InputMenu(Icons.money_off, "Outcome", InputOutcomePage()),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                InputMenu(Icons.savings, "Set Target", Homepage()),
-                InputMenu(Icons.shopping_bag, "Set Limit", Homepage()),
+                InputMenu(Icons.savings, "Set Target", SetTargetPage()),
+                InputMenu(Icons.shopping_bag, "Set Limit", SetLimitsPage()),
               ],
             )
           ],
@@ -223,7 +227,6 @@ class InputMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Color.fromARGB(164, 228, 204, 210),
       shape: RoundedRectangleBorder(
           side: BorderSide(color: Colors.grey.shade300),
           borderRadius: BorderRadius.all(Radius.circular(20))),
@@ -232,7 +235,7 @@ class InputMenu extends StatelessWidget {
         height: 120,
         child: IconButton(
           splashRadius: 75,
-          onPressed: () => Navigator.pushReplacement(context,
+          onPressed: () => Navigator.push(context,
               MaterialPageRoute(builder: (context) => this.destination)),
           icon: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
             Icon(
