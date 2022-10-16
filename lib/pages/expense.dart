@@ -16,18 +16,14 @@ class InputExpensePage extends StatefulWidget {
 
 class _InputExpensePageState extends State<InputExpensePage> {
   Map<String, dynamic> data = {"nominal": 0};
-
   String currencyCode = "IDR";
-
+  String currencySymbol = "Rp";
   String countryFlagCode = "id";
-
   final listPickerField = ListPickerField(
     label: "Payment Method",
     items: const ["Cash", "Debt", "Transfer"],
   );
-
   String purchase = "Cash";
-
   DateTime date = DateTime.now();
 
   @override
@@ -70,8 +66,10 @@ class _InputExpensePageState extends State<InputExpensePage> {
                       width: 100,
                       height: 22,
                       child: TextField(
+                        autofocus: true,
+                        autocorrect: false,
                         decoration: InputDecoration(
-                          hintText: "Input nominal",
+                          prefixText: currencySymbol,
                           hintStyle:
                               TextStyle(color: Colors.grey, fontSize: 14),
                         ),
@@ -79,9 +77,7 @@ class _InputExpensePageState extends State<InputExpensePage> {
                         textAlign: TextAlign.end,
                         keyboardType: TextInputType.number,
                         onSubmitted: (value) {
-                          setState(() {
-                            data['nominal'] = value;
-                          });
+                          setState(() {}); // Don't forget to give code
                         },
                       ),
                     ),
@@ -97,6 +93,7 @@ class _InputExpensePageState extends State<InputExpensePage> {
                             onSelect: (Currency currency) {
                               setState(() {
                                 currencyCode = currency.code;
+                                currencySymbol = currency.symbol;
                                 countryFlagCode =
                                     (currencyCode[0] + currencyCode[1])
                                         .toLowerCase();

@@ -17,6 +17,7 @@ class InputIncomePage extends StatefulWidget {
 class _InputIncomePageState extends State<InputIncomePage> {
   Map<String, dynamic> data = {"nominal": 0};
   String currencyCode = "IDR";
+  String currencySymbol = "Rp";
   String countryFlagCode = "id";
   final listPickerField = ListPickerField(
     label: "Source of Income",
@@ -65,8 +66,10 @@ class _InputIncomePageState extends State<InputIncomePage> {
                       width: 100,
                       height: 22,
                       child: TextField(
+                        autofocus: true,
+                        autocorrect: false,
                         decoration: InputDecoration(
-                          hintText: "Input nominal",
+                          prefixText: currencySymbol,
                           hintStyle:
                               TextStyle(color: Colors.grey, fontSize: 14),
                         ),
@@ -74,9 +77,7 @@ class _InputIncomePageState extends State<InputIncomePage> {
                         textAlign: TextAlign.end,
                         keyboardType: TextInputType.number,
                         onSubmitted: (value) {
-                          setState(() {
-                            data['nominal'] = value;
-                          });
+                          setState(() {}); // Don't forget to give code
                         },
                       ),
                     ),
@@ -92,6 +93,7 @@ class _InputIncomePageState extends State<InputIncomePage> {
                             onSelect: (Currency currency) {
                               setState(() {
                                 currencyCode = currency.code;
+                                currencySymbol = currency.symbol;
                                 countryFlagCode =
                                     (currency.code[0] + currency.code[1])
                                         .toLowerCase();
