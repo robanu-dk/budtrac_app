@@ -99,7 +99,7 @@ class HistoryPage extends StatelessWidget {
                 ),
                 Tab(
                   icon: Icon(Icons.money_off),
-                  text: 'Outcome',
+                  text: 'Expense',
                 )
               ],
               indicator: BoxDecoration(color: Color.fromARGB(255, 235, 28, 97)),

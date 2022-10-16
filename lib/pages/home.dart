@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../navigation/bottom_navigation.dart';
 import '../pages/income.dart';
-import '../pages/outcome.dart';
+import '../pages/expense.dart';
 import '../pages/limit.dart';
 import '../pages/target.dart';
 
@@ -71,7 +71,7 @@ class _HomepageState extends State<Homepage> {
                         });
                       },
                       icon: Text(
-                        'Outcome',
+                        'Expense',
                         style: TextStyle(
                             fontFamily: 'DoppioOne',
                             fontWeight: FontWeight.w400,
@@ -88,7 +88,7 @@ class _HomepageState extends State<Homepage> {
           Padding(
             padding: EdgeInsets.only(top: 15, left: 10, right: 10),
             child:
-                CardTotalIncomeOutcome("Rp 2.000.000", "Rp 1.000.000", income),
+                CardTotalIncomeExpense("Rp 2.000.000", "Rp 1.000.000", income),
           ),
           Padding(
             padding: EdgeInsets.all(10),
@@ -201,7 +201,7 @@ class ModalInput extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 InputMenu(Icons.money, "Income", InputIncomePage()),
-                InputMenu(Icons.money_off, "Outcome", InputOutcomePage()),
+                InputMenu(Icons.money_off, "Expense", InputExpensePage()),
               ],
             ),
             Row(
@@ -292,10 +292,10 @@ class MoneyValue extends StatelessWidget {
   }
 }
 
-class CardTotalIncomeOutcome extends StatelessWidget {
+class CardTotalIncomeExpense extends StatelessWidget {
   bool income;
-  String incomeTotal, outcomeTotal;
-  CardTotalIncomeOutcome(this.incomeTotal, this.outcomeTotal, this.income);
+  String incomeTotal, ExpenseTotal;
+  CardTotalIncomeExpense(this.incomeTotal, this.ExpenseTotal, this.income);
 
   @override
   Widget build(BuildContext context) {
@@ -309,7 +309,7 @@ class CardTotalIncomeOutcome extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              income ? this.incomeTotal : this.outcomeTotal,
+              income ? this.incomeTotal : this.ExpenseTotal,
               style: TextStyle(
                 fontFamily: "DoppioOne",
                 fontSize: 35,

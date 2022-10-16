@@ -1,28 +1,33 @@
+import 'package:currency_picker/currency_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:intl/intl.dart';
 import 'package:country_icons/country_icons.dart';
-import 'package:currency_picker/currency_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:list_picker/list_picker.dart';
 import 'package:moneytracker/pages/home.dart';
 
-class InputIncomePage extends StatefulWidget {
-  InputIncomePage({Key? key}) : super(key: key);
+class InputExpensePage extends StatefulWidget {
+  InputExpensePage({Key? key}) : super(key: key);
 
   @override
-  State<InputIncomePage> createState() => _InputIncomePageState();
+  State<InputExpensePage> createState() => _InputExpensePageState();
 }
 
-class _InputIncomePageState extends State<InputIncomePage> {
+class _InputExpensePageState extends State<InputExpensePage> {
   Map<String, dynamic> data = {"nominal": 0};
+
   String currencyCode = "IDR";
+
   String countryFlagCode = "id";
+
   final listPickerField = ListPickerField(
-    label: "Source of Income",
-    items: const ["Salary", "Debt", "Transfer"],
+    label: "Payment Method",
+    items: const ["Cash", "Debt", "Transfer"],
   );
-  String purchase = "Transfer";
+
+  String purchase = "Cash";
+
   DateTime date = DateTime.now();
 
   @override
@@ -37,7 +42,7 @@ class _InputIncomePageState extends State<InputIncomePage> {
           },
         ),
         title: Text(
-          "Input Income",
+          "Input Expense",
           style: TextStyle(fontSize: 24),
         ),
         backgroundColor: Colors.pink[800],
@@ -93,7 +98,7 @@ class _InputIncomePageState extends State<InputIncomePage> {
                               setState(() {
                                 currencyCode = currency.code;
                                 countryFlagCode =
-                                    (currency.code[0] + currency.code[1])
+                                    (currencyCode[0] + currencyCode[1])
                                         .toLowerCase();
                               });
                             },
