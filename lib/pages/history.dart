@@ -3,72 +3,118 @@ import 'package:intl/intl.dart';
 import '../navigation/bottom_navigation.dart';
 
 class HistoryPage extends StatelessWidget {
+  Map<String, dynamic> category_image = {
+    "Food": "images/food.png",
+    "Drink": "images/drink.png",
+    "Food & Drink": "images/food and drink.png",
+    "Shopping": "images/shopping.png",
+    "Transport": "images/transport.png",
+    "Home": "images/home.png",
+    "Bills & Fees": "images/bill.png",
+    "Netflix": "images/netflix.png",
+    "Game Payment": "images/game.png",
+    "Car": "images/car.png",
+    "Travel": "images/travel.png",
+    "Family & Personal": "images/family and personal/png",
+    "Healthcare": "images/healthcare.png",
+    "Education": "images/education.png",
+    "Groceries": "images/groceries.png",
+    "Gifts": "images/gifts.png",
+    "Sport & Hobbies": "images/sport.png",
+    "Cosmetics": "images/cosmetic.png",
+    "Work": "images/work.png",
+    "Other": "images/other.png",
+    "Salary": "images/salary.png",
+    "Business": "images/business.png",
+    "Extra Income": "images/extra income.png",
+    "Loan": "images/loan.png",
+    "Parent's Inheritance": "images/inheritance.png",
+    "Insurance": "images/insurance.png"
+  };
   List<Map<String, dynamic>> database = [
     {
-      "title": "food",
-      "image": "images/food.jpeg",
+      "name": "Food",
       "date":
           DateFormat.yMd().add_jm().format(DateTime(2022, 9, 8, 10, 10, 20)),
+      "value": 90000,
+      "currency_symbol": "Rp",
       "income": false
     },
     {
-      "title": "ride",
-      "image": "images/ride.jpeg",
-      "date": DateFormat.yMd().add_jm().format(DateTime(2022, 8, 8, 10, 11, 2)),
-      "income": true
-    },
-    {
-      "title": "other",
-      "image": "images/other.jpeg",
-      "date": DateFormat.yMd().add_jm().format(DateTime(2022, 7, 8, 11, 10, 2)),
-      "income": false
-    },
-    {
-      "title": "shopping",
-      "image": "images/shopping.jpeg",
+      "name": "Travel",
       "date":
-          DateFormat.yMd().add_jm().format(DateTime(2022, 6, 8, 10, 20, 60)),
+          DateFormat.yMd().add_jm().format(DateTime(2022, 8, 8, 12, 10, 20)),
+      "value": 250000,
+      "currency_symbol": "Rp",
+      "income": false
+    },
+    {
+      "name": "Salary",
+      "date": DateFormat.yMd().add_jm().format(DateTime(2022, 8, 1, 8, 10, 20)),
+      "value": 3000000,
+      "currency_symbol": "Rp",
       "income": true
     },
     {
-      "title": "food",
-      "image": "images/food.jpeg",
+      "name": "Gifts",
+      "date": DateFormat.yMd().add_jm().format(DateTime(2022, 8, 1, 7, 10, 20)),
+      "value": 100000,
+      "currency_symbol": "Rp",
+      "income": true
+    },
+    {
+      "name": "Car",
+      "date":
+          DateFormat.yMd().add_jm().format(DateTime(2022, 7, 8, 10, 11, 20)),
+      "value": 20000,
+      "currency_symbol": "Rp",
+      "income": false
+    },
+    {
+      "name": "Loan",
+      "date": DateFormat.yMd().add_jm().format(DateTime(2022, 6, 6, 10, 0, 0)),
+      "value": 90000000,
+      "currency_symbol": "Rp",
+      "income": true
+    },
+    {
+      "name": "Extra Income",
+      "date":
+          DateFormat.yMd().add_jm().format(DateTime(2022, 6, 6, 15, 10, 20)),
+      "value": 150000,
+      "currency_symbol": "Rp",
+      "income": true
+    },
+    {
+      "name": "Netflix",
+      "date":
+          DateFormat.yMd().add_jm().format(DateTime(2022, 6, 6, 20, 10, 20)),
+      "value": 100000,
+      "currency_symbol": "Rp",
+      "income": false
+    },
+    {
+      "name": "Work",
       "date":
           DateFormat.yMd().add_jm().format(DateTime(2022, 5, 8, 10, 10, 20)),
+      "value": 900000,
+      "currency_symbol": "Rp",
       "income": true
     },
     {
-      "title": "other",
-      "image": "images/other.jpeg",
+      "name": "Other",
       "date":
-          DateFormat.yMd().add_jm().format(DateTime(2022, 4, 8, 10, 30, 20)),
-      "income": true
-    },
-    {
-      "title": "ride",
-      "image": "images/ride.jpeg",
-      "date": DateFormat.yMd().add_jm().format(DateTime(2022, 3, 8, 10, 25, 2)),
+          DateFormat.yMd().add_jm().format(DateTime(2022, 1, 8, 10, 10, 20)),
+      "value": 90000,
+      "currency_symbol": "Rp",
       "income": false
     },
     {
-      "title": "food",
-      "image": "images/food.jpeg",
+      "name": "Other",
       "date":
-          DateFormat.yMd().add_jm().format(DateTime(2022, 2, 8, 10, 15, 20)),
-      "income": false
-    },
-    {
-      "title": "food",
-      "image": "images/food.jpeg",
-      "date":
-          DateFormat.yMd().add_jm().format(DateTime(2022, 1, 8, 10, 15, 20)),
-      "income": false
-    },
-    {
-      "title": "shopping",
-      "image": "images/shopping.jpeg",
-      "date":
-          DateFormat.yMd().add_jm().format(DateTime(2021, 12, 8, 10, 35, 10)),
+          DateFormat.yMd().add_jm().format(DateTime(2021, 12, 8, 10, 10, 20)),
+      "value": 100000,
+      "currency_symbol": "Rp",
       "income": true
     }
   ];
@@ -121,7 +167,12 @@ class HistoryPage extends StatelessWidget {
                 children: database.map((data) {
                   return Column(
                     children: [
-                      History(data["title"], data["image"], data["date"],
+                      History(
+                          data["name"],
+                          category_image[data["name"]],
+                          data["date"],
+                          data["value"],
+                          data["currency_symbol"],
                           data["income"]),
                       HistoryBar()
                     ],
@@ -141,8 +192,13 @@ class HistoryPage extends StatelessWidget {
                         if (data['income'])
                           Column(
                             children: [
-                              History(data["title"], data["image"],
-                                  data["date"], data["income"]),
+                              History(
+                                  data["name"],
+                                  category_image[data["name"]],
+                                  data["date"],
+                                  data["value"],
+                                  data["currency_symbol"],
+                                  data["income"]),
                               HistoryBar()
                             ],
                           )
@@ -164,7 +220,12 @@ class HistoryPage extends StatelessWidget {
                       if (!data['income'])
                         Column(
                           children: [
-                            History(data["title"], data["image"], data["date"],
+                            History(
+                                data["name"],
+                                category_image[data["name"]],
+                                data["date"],
+                                data["value"],
+                                data["currency_symbol"],
                                 data["income"]),
                             HistoryBar()
                           ],
@@ -254,21 +315,27 @@ class HistoryBar extends StatelessWidget {
 }
 
 class History extends StatelessWidget {
-  String title, avatarImage, dateTime;
+  String title, avatarImage, dateTime, currency_symbol;
   bool income;
+  int value;
 
-  History(this.title, this.avatarImage, this.dateTime, this.income);
+  History(this.title, this.avatarImage, this.dateTime, this.value,
+      this.currency_symbol, this.income);
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       leading: CircleAvatar(
-        backgroundImage: AssetImage(this.avatarImage),
+        backgroundColor: Colors.black,
+        child: Image.asset(
+          this.avatarImage,
+          width: 30,
+        ),
       ),
       title: Text(this.title),
       subtitle: Text(this.dateTime),
       trailing: Text(
-        (this.income ? '+ ' : '- ') + 'Rp 90.000',
+        (this.income ? '+ ' : '- ') + '${this.currency_symbol} ${this.value}',
         style: this.income
             ? TextStyle(color: Colors.green)
             : TextStyle(color: Colors.red),

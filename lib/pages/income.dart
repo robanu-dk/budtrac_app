@@ -16,6 +16,18 @@ class InputIncomePage extends StatefulWidget {
 
 class _InputIncomePageState extends State<InputIncomePage> {
   Map<String, dynamic> data = {"nominal": 0};
+  List<Map<String, dynamic>> category = [
+    {"name": "Salary", "image": "images/salary.png"},
+    {"name": "Business", "image": "images/business.png"},
+    {"name": "Extra Income", "image": "images/extra income.png"},
+    {"name": "Work", "image": "images/work.png"},
+    {"name": "Loan", "image": "images/loan.png"},
+    {"name": "Gifts", "image": "images/gifts.png"},
+    {"name": "Parent's Inheritance", "image": "images/inheritance.png"},
+    {"name": "Insurance", "image": "images/insurance.png"},
+    {"name": "Other", "image": "images/other.png"},
+  ];
+  Map<String, dynamic> chosen_category = {};
   String currencyCode = "IDR";
   String currencySymbol = "Rp";
   String countryFlagCode = "id";
@@ -166,6 +178,102 @@ class _InputIncomePageState extends State<InputIncomePage> {
                 },
               );
             },
+          ),
+        ),
+        Card(
+          shape: RoundedRectangleBorder(
+              side: BorderSide(color: Colors.grey.shade300),
+              borderRadius: BorderRadius.all(Radius.circular(2))),
+          child: IconButton(
+            splashRadius: 210,
+            iconSize: MediaQuery.of(context).size.height * 0.08,
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: ((context) {
+                  return Dialog(
+                    insetPadding:
+                        EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      padding: EdgeInsets.all(8),
+                      height: MediaQuery.of(context).size.height * 0.5,
+                      child: GridView.count(
+                        crossAxisCount: 4,
+                        children: category
+                            .map((data) => Card(
+                                  shape: RoundedRectangleBorder(
+                                    side:
+                                        BorderSide(color: Colors.grey.shade300),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(2)),
+                                  ),
+                                  child: Container(
+                                    width: 100,
+                                    height: 100,
+                                    child: IconButton(
+                                      splashRadius: 60,
+                                      onPressed: () {
+                                        setState(() {
+                                          chosen_category = data;
+                                        });
+                                        Navigator.pop(context);
+                                      },
+                                      icon: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Image.asset(
+                                            data["image"],
+                                            height: 35,
+                                          ),
+                                          Text(
+                                            data["name"],
+                                            overflow: TextOverflow.ellipsis,
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ))
+                            .toList(),
+                      ),
+                    ),
+                  );
+                }),
+              );
+            },
+            icon: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Icon(
+                      Icons.category,
+                      size: 28,
+                    ),
+                    Text(" Category"),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: Row(
+                    children: [
+                      if (chosen_category.isNotEmpty)
+                        CircleAvatar(
+                            backgroundColor: Colors.grey[300],
+                            child: Image.asset(
+                              chosen_category["image"],
+                              width: 30,
+                            )),
+                      if (chosen_category.isNotEmpty)
+                        Text(" ${chosen_category["name"]}"),
+                      if (chosen_category.isEmpty) const Text("Choose")
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
         ),
         Card(

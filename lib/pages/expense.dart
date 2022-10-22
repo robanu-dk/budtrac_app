@@ -15,7 +15,30 @@ class InputExpensePage extends StatefulWidget {
 }
 
 class _InputExpensePageState extends State<InputExpensePage> {
+  List<Map<String, dynamic>> category = [
+    {"name": "Food", "image": "images/food.png"},
+    {"name": "Drink", "image": "images/drink.png"},
+    {"name": "Food & Drink", "image": "images/food and drink.png"},
+    {"name": "Shopping", "image": "images/shopping.png"},
+    {"name": "Transport", "image": "images/transport.png"},
+    {"name": "Home", "image": "images/home.png"},
+    {"name": "Bills & Fees", "image": "images/bill.png"},
+    {"name": "Netflix", "image": "images/netflix.png"},
+    {"name": "Game Payment", "image": "images/game.png"},
+    {"name": "Car", "image": "images/car.png"},
+    {"name": "Travel", "image": "images/travel.png"},
+    {"name": "Family & Personal", "image": "images/family and personal.png"},
+    {"name": "Healthcare", "image": "images/healthcare.png"},
+    {"name": "Education", "image": "images/education.png"},
+    {"name": "Groceries", "image": "images/groceries.png"},
+    {"name": "Gifts", "image": "images/gifts.png"},
+    {"name": "Sport & Hobbies", "image": "images/sport.png"},
+    {"name": "Cosmetics", "image": "images/cosmetic.png"},
+    {"name": "Work", "image": "images/work.png"},
+    {"name": "Other", "image": "images/other.png"},
+  ];
   Map<String, dynamic> data = {"nominal": 0};
+  Map<String, dynamic> chosen_category = {};
   String currencyCode = "IDR";
   String currencySymbol = "Rp";
   String countryFlagCode = "id";
@@ -176,6 +199,102 @@ class _InputExpensePageState extends State<InputExpensePage> {
             splashRadius: 210,
             iconSize: MediaQuery.of(context).size.height * 0.08,
             onPressed: () {
+              showDialog(
+                context: context,
+                builder: ((context) {
+                  return Dialog(
+                    insetPadding:
+                        EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      padding: EdgeInsets.all(8),
+                      height: MediaQuery.of(context).size.height * 0.5,
+                      child: GridView.count(
+                        crossAxisCount: 4,
+                        children: category
+                            .map((data) => Card(
+                                  shape: RoundedRectangleBorder(
+                                    side:
+                                        BorderSide(color: Colors.grey.shade300),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(2)),
+                                  ),
+                                  child: Container(
+                                    width: 100,
+                                    height: 100,
+                                    child: IconButton(
+                                      splashRadius: 60,
+                                      onPressed: () {
+                                        setState(() {
+                                          chosen_category = data;
+                                        });
+                                        Navigator.pop(context);
+                                      },
+                                      icon: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Image.asset(
+                                            data["image"],
+                                            height: 35,
+                                          ),
+                                          Text(
+                                            data["name"],
+                                            overflow: TextOverflow.ellipsis,
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ))
+                            .toList(),
+                      ),
+                    ),
+                  );
+                }),
+              );
+            },
+            icon: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Icon(
+                      Icons.category,
+                      size: 28,
+                    ),
+                    Text(" Category"),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: Row(
+                    children: [
+                      if (chosen_category.isNotEmpty)
+                        CircleAvatar(
+                            backgroundColor: Colors.grey[300],
+                            child: Image.asset(
+                              chosen_category["image"],
+                              width: 30,
+                            )),
+                      if (chosen_category.isNotEmpty)
+                        Text(" ${chosen_category["name"]}"),
+                      if (chosen_category.isEmpty) const Text("Choose")
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+        Card(
+          shape: RoundedRectangleBorder(
+              side: BorderSide(color: Colors.grey.shade300),
+              borderRadius: BorderRadius.all(Radius.circular(2))),
+          child: IconButton(
+            splashRadius: 210,
+            iconSize: MediaQuery.of(context).size.height * 0.08,
+            onPressed: () {
               showDatePicker(
                 context: context,
                 initialDate: date,
@@ -229,7 +348,7 @@ class _InputExpensePageState extends State<InputExpensePage> {
                   child: TextField(
                     decoration: InputDecoration(
                       border: InputBorder.none,
-                      label: Text("Note"),
+                      label: Text(" Note"),
                     ),
                     maxLines: 5,
                     minLines: 1,
