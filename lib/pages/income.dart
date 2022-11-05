@@ -94,7 +94,10 @@ class _InputIncomePageState extends State<InputIncomePage> {
                       ),
                     ),
                     Container(
-                      width: MediaQuery.of(context).size.width * 0.26,
+                      width: MediaQuery.of(context).orientation ==
+                              Orientation.portrait
+                          ? MediaQuery.of(context).size.width * 0.26
+                          : MediaQuery.of(context).size.width * 0.13,
                       child: IconButton(
                         onPressed: () {
                           showCurrencyPicker(
@@ -140,8 +143,11 @@ class _InputIncomePageState extends State<InputIncomePage> {
               side: BorderSide(color: Colors.grey.shade300),
               borderRadius: BorderRadius.all(Radius.circular(2))),
           child: IconButton(
-            splashRadius: 210,
-            iconSize: MediaQuery.of(context).size.height * 0.08,
+            splashRadius:
+                MediaQuery.of(context).orientation == Orientation.landscape
+                    ? 350
+                    : 210,
+            iconSize: 50,
             icon: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -185,8 +191,11 @@ class _InputIncomePageState extends State<InputIncomePage> {
               side: BorderSide(color: Colors.grey.shade300),
               borderRadius: BorderRadius.all(Radius.circular(2))),
           child: IconButton(
-            splashRadius: 210,
-            iconSize: MediaQuery.of(context).size.height * 0.08,
+            splashRadius:
+                MediaQuery.of(context).orientation == Orientation.landscape
+                    ? 350
+                    : 210,
+            iconSize: 50,
             onPressed: () {
               showDialog(
                 context: context,
@@ -212,7 +221,11 @@ class _InputIncomePageState extends State<InputIncomePage> {
                                     width: 100,
                                     height: 100,
                                     child: IconButton(
-                                      splashRadius: 60,
+                                      splashRadius:
+                                          MediaQuery.of(context).orientation ==
+                                                  Orientation.landscape
+                                              ? 350
+                                              : 60,
                                       onPressed: () {
                                         setState(() {
                                           chosen_category = data;
@@ -281,8 +294,11 @@ class _InputIncomePageState extends State<InputIncomePage> {
               side: BorderSide(color: Colors.grey.shade300),
               borderRadius: BorderRadius.all(Radius.circular(2))),
           child: IconButton(
-            splashRadius: 210,
-            iconSize: MediaQuery.of(context).size.height * 0.08,
+            splashRadius:
+                MediaQuery.of(context).orientation == Orientation.landscape
+                    ? 350
+                    : 210,
+            iconSize: 50,
             onPressed: () {
               showDatePicker(
                 context: context,
@@ -353,8 +369,11 @@ class _InputIncomePageState extends State<InputIncomePage> {
             borderRadius: BorderRadius.all(Radius.circular(2)),
           ),
           child: IconButton(
-            iconSize: MediaQuery.of(context).size.height * 0.08,
-            splashRadius: 210,
+            iconSize: 50,
+            splashRadius:
+                MediaQuery.of(context).orientation == Orientation.landscape
+                    ? 350
+                    : 210,
             onPressed: () {},
             icon: Row(
               children: [

@@ -79,7 +79,10 @@ class _SetTargetPageState extends State<SetTargetPage> {
                         ),
                       ),
                       Container(
-                        width: MediaQuery.of(context).size.width * 0.26,
+                        width: MediaQuery.of(context).orientation ==
+                                Orientation.portrait
+                            ? MediaQuery.of(context).size.width * 0.26
+                            : MediaQuery.of(context).size.width * 0.13,
                         child: IconButton(
                           onPressed: () {
                             showCurrencyPicker(
@@ -125,8 +128,11 @@ class _SetTargetPageState extends State<SetTargetPage> {
                 side: BorderSide(color: Colors.grey.shade300),
                 borderRadius: BorderRadius.all(Radius.circular(2))),
             child: IconButton(
-              splashRadius: 210,
-              iconSize: MediaQuery.of(context).size.height * 0.08,
+              splashRadius:
+                  MediaQuery.of(context).orientation == Orientation.landscape
+                      ? 350
+                      : 210,
+              iconSize: 50,
               onPressed: () {
                 showDatePicker(
                   context: context,
@@ -167,8 +173,11 @@ class _SetTargetPageState extends State<SetTargetPage> {
                 side: BorderSide(color: Colors.grey.shade300),
                 borderRadius: BorderRadius.all(Radius.circular(2))),
             child: IconButton(
-              splashRadius: 210,
-              iconSize: MediaQuery.of(context).size.height * 0.08,
+              splashRadius:
+                  MediaQuery.of(context).orientation == Orientation.landscape
+                      ? 350
+                      : 210,
+              iconSize: 50,
               onPressed: () {
                 showDatePicker(
                   context: context,
