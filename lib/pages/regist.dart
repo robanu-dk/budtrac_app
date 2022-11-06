@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:moneytracker/provider/user_provider.dart';
+import 'package:provider/provider.dart';
 
 class RegistPage extends StatefulWidget {
   const RegistPage({Key? key}) : super(key: key);
@@ -11,8 +13,13 @@ class _RegistPageState extends State<RegistPage> {
   bool _hide1 = true;
   bool _hide2 = true;
   bool _ischecked = false;
+  final firstName = TextEditingController();
+  final lastName = TextEditingController();
+  final email = TextEditingController();
+  final password = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    final regist = Provider.of<User>(context, listen: false);
     return Scaffold(
       backgroundColor: Colors.pink[800],
       appBar: null,
@@ -39,6 +46,7 @@ class _RegistPageState extends State<RegistPage> {
                     width: MediaQuery.of(context).size.width * 0.87,
                     height: MediaQuery.of(context).size.height * 0.1,
                     child: TextField(
+                      controller: firstName,
                       textCapitalization: TextCapitalization.sentences,
                       autocorrect: false,
                       keyboardType: TextInputType.name,
@@ -57,6 +65,7 @@ class _RegistPageState extends State<RegistPage> {
                   width: MediaQuery.of(context).size.width * 0.87,
                   height: MediaQuery.of(context).size.height * 0.1,
                   child: TextField(
+                    controller: lastName,
                     textCapitalization: TextCapitalization.sentences,
                     autocorrect: false,
                     keyboardType: TextInputType.name,
@@ -74,6 +83,7 @@ class _RegistPageState extends State<RegistPage> {
                   width: MediaQuery.of(context).size.width * 0.87,
                   height: MediaQuery.of(context).size.height * 0.1,
                   child: TextField(
+                    controller: email,
                     textCapitalization: TextCapitalization.none,
                     autocorrect: false,
                     keyboardType: TextInputType.emailAddress,
@@ -91,6 +101,7 @@ class _RegistPageState extends State<RegistPage> {
                   width: MediaQuery.of(context).size.width * 0.87,
                   height: MediaQuery.of(context).size.height * 0.11,
                   child: TextField(
+                    controller: password,
                     maxLength: 32,
                     textCapitalization: TextCapitalization.none,
                     autocorrect: false,
@@ -133,29 +144,29 @@ class _RegistPageState extends State<RegistPage> {
                       obscureText: _hide2,
                       keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
-                          label: Text('Retype Password'),
-                          labelStyle: TextStyle(fontSize: 16),
-                          focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.lightBlue),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(30))),
-                          prefixIcon: Icon(Icons.key),
-                          suffixIcon: IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  if (_hide2) {
-                                    _hide2 = false;
-                                  } else {
-                                    _hide2 = true;
-                                  }
-                                });
-                              },
-                              icon: Icon(
-                                Icons.remove_red_eye,
-                                color: _hide2
-                                    ? Colors.grey[600]
-                                    : Colors.pink[800],
-                              ))),
+                        label: Text('Retype Password'),
+                        labelStyle: TextStyle(fontSize: 16),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.lightBlue),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(30))),
+                        prefixIcon: Icon(Icons.key),
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              if (_hide2) {
+                                _hide2 = false;
+                              } else {
+                                _hide2 = true;
+                              }
+                            });
+                          },
+                          icon: Icon(
+                            Icons.remove_red_eye,
+                            color: _hide2 ? Colors.grey[600] : Colors.pink[800],
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -188,6 +199,8 @@ class _RegistPageState extends State<RegistPage> {
                     width: 200,
                     child: TextButton(
                       onPressed: () {
+                        regist.regist(firstName.text, lastName.text, email.text,
+                            password.text);
                         Navigator.pop(context);
                       },
                       child: Text(

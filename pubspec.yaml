@@ -35,6 +35,8 @@ dependencies:
   currency_picker: ^2.0.12 # Currency Picker for country
   list_picker: ^1.0.0 # List Picker, Pick from a list
   # image_picker: ^0.6.7+6 # Pick image from galery or camera
+  provider: ^6.0.4
+  http: ^0.13.5
 
 
   # The following adds the Cupertino Icons font to your application.
