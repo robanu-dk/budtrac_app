@@ -165,10 +165,10 @@ class _MyWidgetState extends State<LoginPage> {
                     child: TextButton(
                       onPressed: () {},
                       child: Container(
-                          height: 30,
-                          width: 300,
-                          child: Center(
-                              child: Row(
+                        height: 30,
+                        width: 300,
+                        child: Center(
+                          child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Image.asset('images/icon google.png'),
@@ -181,7 +181,9 @@ class _MyWidgetState extends State<LoginPage> {
                                 ),
                               ),
                             ],
-                          ))),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ]),

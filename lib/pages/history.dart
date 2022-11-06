@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import '../navigation/bottom_navigation.dart';
+import '../widget/totalMoneyAndDuration.dart';
+import '../widget/historyBar.dart';
+import '../widget/historyTile.dart';
 
 class HistoryPage extends StatelessWidget {
   Map<String, dynamic> category_image = {
@@ -237,114 +241,6 @@ class HistoryPage extends StatelessWidget {
             ),
           ]),
           bottomNavigationBar: BottomNavigation(1)),
-    );
-  }
-}
-
-class TotalMoneyAndDuration extends StatelessWidget {
-  String category, timeStart, timeEnd, money;
-  TotalMoneyAndDuration(
-      this.category, this.money, this.timeStart, this.timeEnd);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 10, right: 10, top: 12, bottom: 12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
-            "Total: " + this.category,
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-          Text(
-            this.money,
-            style: TextStyle(fontFamily: "DoppioOne", color: Colors.pink[900]),
-          ),
-          HistoryBar(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                width: MediaQuery.of(context).size.width * 0.47,
-                child: Column(
-                  children: [
-                    Text("Time Start:",
-                        style: TextStyle(fontWeight: FontWeight.bold)),
-                    Text(this.timeStart,
-                        style: TextStyle(fontWeight: FontWeight.bold))
-                  ],
-                ),
-              ),
-              Container(
-                width: 2,
-                height: 32,
-                color: Colors.black12,
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width * 0.47,
-                child: Column(
-                  children: [
-                    Text("Time End:",
-                        style: TextStyle(fontWeight: FontWeight.bold)),
-                    Text(this.timeEnd,
-                        style: TextStyle(fontWeight: FontWeight.bold))
-                  ],
-                ),
-              )
-            ],
-          )
-        ],
-      ),
-    );
-  }
-}
-
-class HistoryBar extends StatelessWidget {
-  const HistoryBar({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Divider(
-      thickness: 2,
-      color: Colors.black12,
-    );
-  }
-}
-
-class History extends StatelessWidget {
-  String title, avatarImage, dateTime, currency_symbol;
-  bool income;
-  int value;
-
-  History(this.title, this.avatarImage, this.dateTime, this.value,
-      this.currency_symbol, this.income);
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: CircleAvatar(
-        backgroundColor: Colors.black,
-        child: Image.asset(
-          this.avatarImage,
-          width: 30,
-        ),
-      ),
-      title: Text(this.title),
-      subtitle: Text(this.dateTime),
-      trailing: Text(
-        (this.income ? '+ ' : '- ') + '${this.currency_symbol} ${this.value}',
-        style: this.income
-            ? TextStyle(color: Colors.green)
-            : TextStyle(color: Colors.red),
-      ),
-      onTap: () {},
-      // onLongPress: () {},
-      // autofocus: true,
-      hoverColor: Colors.blueGrey[100],
-      // tileColor: Colors.amber,
     );
   }
 }
