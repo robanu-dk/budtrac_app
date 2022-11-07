@@ -83,26 +83,28 @@ class _MyWidgetState extends State<LoginPage> {
                       obscureText: hide,
                       maxLength: 32,
                       decoration: InputDecoration(
-                          focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30)),
-                          prefixIcon: Icon(Icons.key),
-                          labelText: "Password",
-                          suffixIcon: IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  if (hide) {
-                                    icon_eye_color = Colors.pink.shade600;
-                                    hide = false;
-                                  } else {
-                                    icon_eye_color = Colors.grey;
-                                    hide = true;
-                                  }
-                                });
-                              },
-                              icon: Icon(
-                                Icons.remove_red_eye,
-                                color: icon_eye_color,
-                              ))),
+                        focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30)),
+                        prefixIcon: Icon(Icons.key),
+                        labelText: "Password",
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              if (hide) {
+                                icon_eye_color = Colors.pink.shade600;
+                                hide = false;
+                              } else {
+                                icon_eye_color = Colors.grey;
+                                hide = true;
+                              }
+                            });
+                          },
+                          icon: Icon(
+                            Icons.remove_red_eye,
+                            color: icon_eye_color,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                   Card(
@@ -115,13 +117,15 @@ class _MyWidgetState extends State<LoginPage> {
                           MaterialPageRoute(
                               builder: ((context) => Homepage()))),
                       child: Container(
-                          height: 30,
-                          width: 300,
-                          child: Center(
-                              child: Text(
+                        height: 30,
+                        width: 300,
+                        child: Center(
+                          child: Text(
                             "Log in",
                             style: TextStyle(color: Colors.white, fontSize: 20),
-                          ))),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                   Row(

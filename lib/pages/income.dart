@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:country_icons/country_icons.dart';
 import 'package:currency_picker/currency_picker.dart';
@@ -40,6 +41,15 @@ class _InputIncomePageState extends State<InputIncomePage> {
 
   @override
   Widget build(BuildContext context) {
+    selectFromCamera() async {
+      XFile? cameraFile = await ImagePicker().pickImage(
+        source: ImageSource.camera,
+        // maxHeight: 50.0,
+        // maxWidth: 50.0,
+      );
+      setState(() {});
+    }
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -374,7 +384,7 @@ class _InputIncomePageState extends State<InputIncomePage> {
                 MediaQuery.of(context).orientation == Orientation.landscape
                     ? 350
                     : 210,
-            onPressed: () {},
+            onPressed: selectFromCamera,
             icon: Row(
               children: [
                 Icon(

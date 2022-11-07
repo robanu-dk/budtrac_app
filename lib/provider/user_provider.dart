@@ -15,7 +15,8 @@ class User with ChangeNotifier {
           "firstName": firstName,
           "lastName": lastName,
           "email": email,
-          "password": password
+          "password": password,
+          "createdAt": DateTime.now().toString()
         },
       ),
     );

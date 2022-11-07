@@ -201,6 +201,12 @@ class _RegistPageState extends State<RegistPage> {
                       onPressed: () {
                         regist.regist(firstName.text, lastName.text, email.text,
                             password.text);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text("Registration Success!!"),
+                            duration: Duration(seconds: 2),
+                          ),
+                        );
                         Navigator.pop(context);
                       },
                       child: Text(
