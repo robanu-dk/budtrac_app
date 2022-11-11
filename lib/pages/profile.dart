@@ -1,27 +1,52 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:image_picker/image_picker.dart';
+
 import '../navigation/bottom_navigation.dart';
 import '../pages/login.dart';
+import '../provider/user_provider.dart';
+import '../widget/profileImage.dart';
+import '../widget/iconEditProfileImage.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({Key? key}) : super(key: key);
+  ProfilePage({super.key});
+
   @override
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  Map<String, dynamic> profile = {
-    'firstname': 'Contoh',
-    'lastname': 'Pengguna',
-    'email': 'contoh_pengguna@gmail.com',
-    'phone_number': '082011633000',
-    'image_profile': 'images/profile.png'
-  };
-  bool _change_image = false;
   bool _edit = false;
-  Icon _edit_icon = Icon(Icons.edit);
-  String _edit_text = 'edit';
+
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<User>(context, listen: false);
+
+    Map<String, dynamic> profile = {
+      'firstname': user.getFirstName,
+      'lastname': user.getLastName,
+      'email': user.getEmail,
+      'phone_number': user.getPhoneNumber,
+      'image_profile': 'images/profile.png'
+    };
+
+    selectFromCamera() async {
+      XFile? cameraFile = await ImagePicker().pickImage(
+        source: ImageSource.camera,
+        // maxHeight: 50.0,
+        // maxWidth: 50.0,
+      );
+      print(cameraFile!.path.toString());
+    }
+
+    selectFromGallery() async {
+      XFile? galleryFile = await ImagePicker().pickImage(
+        source: ImageSource.gallery,
+        // maxHeight: 50.0,
+        // maxWidth: 50.0,
+      );
+    }
+
     return Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
@@ -48,19 +73,82 @@ class _ProfilePageState extends State<ProfilePage> {
                                 BorderRadius.all(Radius.circular(10))),
                         shadowColor: Colors.black,
                         color: Color.fromARGB(50, 0, 0, 0),
-                        child: IconButton(
+                        child: Consumer<User>(
+                          builder: (context, value, child) => IconButton(
                             padding: EdgeInsets.only(
                                 left: 2, right: 2, bottom: 2, top: 2),
                             splashRadius: 10,
                             iconSize: 120,
                             onPressed: () {
-                              _change_image ? print('change') : null;
+                              showDialog(
+                                context: context,
+                                builder: (context) => Dialog(
+                                  insetPadding: EdgeInsets.symmetric(
+                                      vertical: 5, horizontal: 5),
+                                  alignment: Alignment.bottomCenter,
+                                  child: Container(
+                                    height: (MediaQuery.of(context)
+                                                .orientation ==
+                                            Orientation.landscape)
+                                        ? MediaQuery.of(context).size.height *
+                                            0.22
+                                        : MediaQuery.of(context).size.height *
+                                            0.15,
+                                    width:
+                                        MediaQuery.of(context).size.width * 1,
+                                    child: SingleChildScrollView(
+                                      scrollDirection: Axis.vertical,
+                                      child: Row(
+                                        children: [
+                                          IconButton(
+                                            splashRadius: 50,
+                                            iconSize: 85,
+                                            icon: Column(
+                                              children: [
+                                                Icon(
+                                                  Icons.camera_alt_rounded,
+                                                  size: 60,
+                                                ),
+                                                Text("Camera"),
+                                              ],
+                                            ),
+                                            onPressed: selectFromCamera,
+                                          ),
+                                          IconButton(
+                                            splashRadius: 50,
+                                            iconSize: 85,
+                                            icon: Column(
+                                              children: [
+                                                Icon(
+                                                  Icons.perm_media_sharp,
+                                                  size: 60,
+                                                ),
+                                                Text("Gallery"),
+                                              ],
+                                            ),
+                                            onPressed: selectFromGallery,
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
                             },
-                            icon: ClipRRect(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
-                              child: Image.asset('${profile['image_profile']}'),
-                            )),
+                            icon: _edit
+                                ? Stack(
+                                    children: [
+                                      ProfileImage(
+                                        image:
+                                            profile['image_profile'].toString(),
+                                      ),
+                                      IconEditProfileImage(),
+                                    ],
+                                  )
+                                : ProfileImage(
+                                    image: profile['image_profile'].toString()),
+                          ),
+                        ),
                       ),
                     ),
                     Padding(
@@ -111,26 +199,16 @@ class _ProfilePageState extends State<ProfilePage> {
                         width: 100,
                         child: TextButton(
                           onPressed: () {
-                            if (_edit) {
-                              setState(() {
-                                _edit = false;
-                                _edit_icon = Icon(Icons.edit);
-                                _edit_text = 'Edit';
-                              });
-                            } else {
-                              setState(() {
-                                _edit = true;
-                                _edit_icon = Icon(Icons.save);
-                                _edit_text = 'Save';
-                              });
-                            }
+                            setState(() {
+                              _edit = !_edit;
+                            });
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              _edit_icon,
+                              _edit ? Icon(Icons.save) : Icon(Icons.edit),
                               Text(
-                                _edit_text,
+                                _edit ? 'Save' : 'Edit',
                                 style: TextStyle(fontSize: 16),
                               )
                             ],
@@ -142,34 +220,30 @@ class _ProfilePageState extends State<ProfilePage> {
                         children: [
                           Container(
                             width: MediaQuery.of(context).size.width * 0.45,
-                            child: TextField(
-                              // Sementara, dikarenakan ketika controllernya
-                              //tetap TextEditingController, maka ketika diedit
-                              //cursornya selalu ada di paling kiri, jadi ketika
-                              //edit adalah true maka controllernya null
-                              controller: _edit
-                                  ? null
-                                  : TextEditingController(
-                                      text: '${profile['firstname']}'),
-                              enabled: _edit,
-                              autocorrect: false,
-                              decoration: InputDecoration(
-                                focusedBorder: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Colors.lightBlue)),
-                                border: _edit
-                                    ? UnderlineInputBorder()
-                                    : InputBorder.none,
-                                label: Text(
-                                  "First Name",
-                                  style: TextStyle(fontSize: 22),
+                            child: Consumer<User>(
+                              builder: (context, value, child) => TextField(
+                                controller: _edit
+                                    ? null
+                                    : TextEditingController(
+                                        text: '${profile['firstname']}'),
+                                enabled: _edit,
+                                autocorrect: false,
+                                decoration: InputDecoration(
+                                  focusedBorder: OutlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.lightBlue)),
+                                  border: _edit
+                                      ? UnderlineInputBorder()
+                                      : InputBorder.none,
+                                  label: Text(
+                                    "First Name",
+                                    style: TextStyle(fontSize: 22),
+                                  ),
                                 ),
+                                onSubmitted: (value) {
+                                  user.setFirstName(value);
+                                },
                               ),
-                              onChanged: (value) {
-                                setState(() {
-                                  profile['firstname'] = value;
-                                });
-                              },
                             ),
                           ),
                           Container(
@@ -177,34 +251,30 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                           Container(
                             width: MediaQuery.of(context).size.width * 0.45,
-                            child: TextField(
-                              // Sementara, dikarenakan ketika controllernya
-                              //tetap TextEditingController, maka ketika diedit
-                              //cursornya selalu ada di paling kiri, jadi ketika
-                              //edit adalah true maka controllernya null
-                              controller: _edit
-                                  ? null
-                                  : TextEditingController(
-                                      text: '${profile['lastname']}'),
-                              enabled: _edit,
-                              autocorrect: false,
-                              decoration: InputDecoration(
-                                focusedBorder: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Colors.lightBlue)),
-                                border: _edit
-                                    ? UnderlineInputBorder()
-                                    : InputBorder.none,
-                                label: Text(
-                                  "Last Name",
-                                  style: TextStyle(fontSize: 22),
+                            child: Consumer<User>(
+                              builder: (context, value, child) => TextField(
+                                controller: _edit
+                                    ? null
+                                    : TextEditingController(
+                                        text: '${profile['lastname']}'),
+                                enabled: _edit,
+                                autocorrect: false,
+                                decoration: InputDecoration(
+                                  focusedBorder: OutlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.lightBlue)),
+                                  border: _edit
+                                      ? UnderlineInputBorder()
+                                      : InputBorder.none,
+                                  label: Text(
+                                    "Last Name",
+                                    style: TextStyle(fontSize: 22),
+                                  ),
                                 ),
+                                onSubmitted: (value) {
+                                  user.setLastName(value);
+                                },
                               ),
-                              onChanged: (value) {
-                                setState(() {
-                                  profile['lastname'] = value;
-                                });
-                              },
                             ),
                           ),
                         ],
@@ -213,28 +283,28 @@ class _ProfilePageState extends State<ProfilePage> {
                         child: Container(
                           padding: EdgeInsets.only(top: 14),
                           width: MediaQuery.of(context).size.width * 0.94,
-                          child: TextField(
-                            keyboardType: TextInputType.emailAddress,
-                            onChanged: (value) {
-                              setState(() {
-                                profile['email'] = value;
-                              });
-                            },
-                            enabled: _edit,
-                            controller: _edit
-                                ? null
-                                : TextEditingController(
-                                    text: '${profile['email']}'),
-                            decoration: InputDecoration(
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Colors.lightBlue)),
-                              border: _edit
-                                  ? UnderlineInputBorder()
-                                  : InputBorder.none,
-                              label: Text(
-                                "Email Address",
-                                style: TextStyle(fontSize: 22),
+                          child: Consumer<User>(
+                            builder: (context, value, child) => TextField(
+                              keyboardType: TextInputType.emailAddress,
+                              onChanged: (value) {
+                                user.setEmail(value);
+                              },
+                              enabled: _edit,
+                              controller: _edit
+                                  ? null
+                                  : TextEditingController(
+                                      text: '${profile['email']}'),
+                              decoration: InputDecoration(
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Colors.lightBlue)),
+                                border: _edit
+                                    ? UnderlineInputBorder()
+                                    : InputBorder.none,
+                                label: Text(
+                                  "Email Address",
+                                  style: TextStyle(fontSize: 22),
+                                ),
                               ),
                             ),
                           ),
@@ -244,29 +314,29 @@ class _ProfilePageState extends State<ProfilePage> {
                         child: Container(
                           padding: EdgeInsets.only(top: 14),
                           width: MediaQuery.of(context).size.width * 0.94,
-                          child: TextField(
-                            maxLength: 13,
-                            keyboardType: TextInputType.phone,
-                            onChanged: (value) {
-                              setState(() {
-                                profile['phone_number'] = value;
-                              });
-                            },
-                            enabled: _edit,
-                            controller: _edit
-                                ? null
-                                : TextEditingController(
-                                    text: '${profile['phone_number']}'),
-                            decoration: InputDecoration(
-                              focusedBorder: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Colors.lightBlue)),
-                              border: _edit
-                                  ? UnderlineInputBorder()
-                                  : InputBorder.none,
-                              label: Text(
-                                "Phone Number",
-                                style: TextStyle(fontSize: 22),
+                          child: Consumer<User>(
+                            builder: (context, value, child) => TextField(
+                              maxLength: 13,
+                              keyboardType: TextInputType.phone,
+                              onChanged: (value) {
+                                user.setPhoneNumber(value);
+                              },
+                              enabled: _edit,
+                              controller: _edit
+                                  ? null
+                                  : TextEditingController(
+                                      text: '${profile['phone_number']}'),
+                              decoration: InputDecoration(
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Colors.lightBlue)),
+                                border: _edit
+                                    ? UnderlineInputBorder()
+                                    : InputBorder.none,
+                                label: Text(
+                                  "Phone Number",
+                                  style: TextStyle(fontSize: 22),
+                                ),
                               ),
                             ),
                           ),

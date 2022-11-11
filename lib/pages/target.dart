@@ -33,7 +33,7 @@ class _SetTargetPageState extends State<SetTargetPage> {
         ),
         centerTitle: true,
         leading: IconButton(
-          icon: Icon(Icons.home),
+          icon: Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context);
           },

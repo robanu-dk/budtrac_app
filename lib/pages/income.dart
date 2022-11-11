@@ -6,7 +6,8 @@ import 'package:intl/intl.dart';
 import 'package:country_icons/country_icons.dart';
 import 'package:currency_picker/currency_picker.dart';
 import 'package:list_picker/list_picker.dart';
-import 'package:moneytracker/pages/home.dart';
+
+import './home.dart';
 
 class InputIncomePage extends StatefulWidget {
   InputIncomePage({Key? key}) : super(key: key);
@@ -50,11 +51,20 @@ class _InputIncomePageState extends State<InputIncomePage> {
       setState(() {});
     }
 
+    selectFromGallery() async {
+      XFile? galleryFile = await ImagePicker().pickImage(
+        source: ImageSource.gallery,
+        // maxHeight: 50.0,
+        // maxWidth: 50.0,
+      );
+      setState(() {});
+    }
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         leading: IconButton(
-          icon: Icon(Icons.home),
+          icon: Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -361,6 +371,7 @@ class _InputIncomePageState extends State<InputIncomePage> {
                 Container(
                   width: MediaQuery.of(context).size.width * 0.86,
                   child: TextField(
+                    keyboardType: TextInputType.text,
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       label: Text("Note"),
@@ -384,7 +395,58 @@ class _InputIncomePageState extends State<InputIncomePage> {
                 MediaQuery.of(context).orientation == Orientation.landscape
                     ? 350
                     : 210,
-            onPressed: selectFromCamera,
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) => Dialog(
+                  insetPadding:
+                      EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    height: (MediaQuery.of(context).orientation ==
+                            Orientation.landscape)
+                        ? MediaQuery.of(context).size.height * 0.22
+                        : MediaQuery.of(context).size.height * 0.15,
+                    width: MediaQuery.of(context).size.width * 1,
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.vertical,
+                      child: Row(
+                        children: [
+                          IconButton(
+                            splashRadius: 50,
+                            iconSize: 85,
+                            icon: Column(
+                              children: [
+                                Icon(
+                                  Icons.camera_alt_rounded,
+                                  size: 60,
+                                ),
+                                Text("Camera"),
+                              ],
+                            ),
+                            onPressed: selectFromCamera,
+                          ),
+                          IconButton(
+                            splashRadius: 50,
+                            iconSize: 85,
+                            icon: Column(
+                              children: [
+                                Icon(
+                                  Icons.perm_media_sharp,
+                                  size: 60,
+                                ),
+                                Text("Gallery"),
+                              ],
+                            ),
+                            onPressed: selectFromGallery,
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
             icon: Row(
               children: [
                 Icon(

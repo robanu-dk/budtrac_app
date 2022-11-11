@@ -31,7 +31,7 @@ class _SetLimitsPageState extends State<SetLimitsPage> {
         ),
         centerTitle: true,
         leading: IconButton(
-          icon: Icon(Icons.home),
+          icon: Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context);
           },

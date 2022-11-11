@@ -5,7 +5,9 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:country_icons/country_icons.dart';
 import 'package:intl/intl.dart';
 import 'package:list_picker/list_picker.dart';
-import 'package:moneytracker/pages/home.dart';
+import 'package:image_picker/image_picker.dart';
+
+import './home.dart';
 
 class InputExpensePage extends StatefulWidget {
   InputExpensePage({Key? key}) : super(key: key);
@@ -51,11 +53,29 @@ class _InputExpensePageState extends State<InputExpensePage> {
 
   @override
   Widget build(BuildContext context) {
+    selectFromCamera() async {
+      XFile? cameraFile = await ImagePicker().pickImage(
+        source: ImageSource.camera,
+        // maxHeight: 50.0,
+        // maxWidth: 50.0,
+      );
+      setState(() {});
+    }
+
+    selectFromGallery() async {
+      XFile? galleryFile = await ImagePicker().pickImage(
+        source: ImageSource.gallery,
+        // maxHeight: 50.0,
+        // maxWidth: 50.0,
+      );
+      setState(() {});
+    }
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         leading: IconButton(
-          icon: Icon(Icons.home),
+          icon: Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -358,6 +378,7 @@ class _InputExpensePageState extends State<InputExpensePage> {
                 Container(
                   width: MediaQuery.of(context).size.width * 0.86,
                   child: TextField(
+                    keyboardType: TextInputType.text,
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       label: Text(" Note"),
@@ -381,7 +402,58 @@ class _InputExpensePageState extends State<InputExpensePage> {
                 MediaQuery.of(context).orientation == Orientation.landscape
                     ? 350
                     : 210,
-            onPressed: () {},
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) => Dialog(
+                  insetPadding:
+                      EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    height: (MediaQuery.of(context).orientation ==
+                            Orientation.landscape)
+                        ? MediaQuery.of(context).size.height * 0.22
+                        : MediaQuery.of(context).size.height * 0.15,
+                    width: MediaQuery.of(context).size.width * 1,
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.vertical,
+                      child: Row(
+                        children: [
+                          IconButton(
+                            splashRadius: 50,
+                            iconSize: 85,
+                            icon: Column(
+                              children: [
+                                Icon(
+                                  Icons.camera_alt_rounded,
+                                  size: 60,
+                                ),
+                                Text("Camera"),
+                              ],
+                            ),
+                            onPressed: selectFromCamera,
+                          ),
+                          IconButton(
+                            splashRadius: 50,
+                            iconSize: 85,
+                            icon: Column(
+                              children: [
+                                Icon(
+                                  Icons.perm_media_sharp,
+                                  size: 60,
+                                ),
+                                Text("Gallery"),
+                              ],
+                            ),
+                            onPressed: selectFromGallery,
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
             icon: Row(
               children: [
                 Icon(
