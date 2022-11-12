@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
@@ -7,6 +9,7 @@ import '../pages/login.dart';
 import '../provider/user_provider.dart';
 import '../widget/profileImage.dart';
 import '../widget/iconEditProfileImage.dart';
+import '../widget/tombolAction.dart';
 
 class ProfilePage extends StatefulWidget {
   ProfilePage({super.key});
@@ -80,60 +83,69 @@ class _ProfilePageState extends State<ProfilePage> {
                             splashRadius: 10,
                             iconSize: 120,
                             onPressed: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) => Dialog(
-                                  insetPadding: EdgeInsets.symmetric(
-                                      vertical: 5, horizontal: 5),
-                                  alignment: Alignment.bottomCenter,
-                                  child: Container(
-                                    height: (MediaQuery.of(context)
-                                                .orientation ==
-                                            Orientation.landscape)
-                                        ? MediaQuery.of(context).size.height *
-                                            0.22
-                                        : MediaQuery.of(context).size.height *
-                                            0.15,
-                                    width:
-                                        MediaQuery.of(context).size.width * 1,
-                                    child: SingleChildScrollView(
-                                      scrollDirection: Axis.vertical,
-                                      child: Row(
-                                        children: [
-                                          IconButton(
-                                            splashRadius: 50,
-                                            iconSize: 85,
-                                            icon: Column(
+                              _edit
+                                  ? showDialog(
+                                      context: context,
+                                      builder: (context) => Dialog(
+                                        insetPadding: EdgeInsets.symmetric(
+                                            vertical: 5, horizontal: 5),
+                                        alignment: Alignment.bottomCenter,
+                                        child: Container(
+                                          height: (MediaQuery.of(context)
+                                                      .orientation ==
+                                                  Orientation.landscape)
+                                              ? MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.22
+                                              : MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.15,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              1,
+                                          child: SingleChildScrollView(
+                                            scrollDirection: Axis.vertical,
+                                            child: Row(
                                               children: [
-                                                Icon(
-                                                  Icons.camera_alt_rounded,
-                                                  size: 60,
+                                                IconButton(
+                                                  splashRadius: 50,
+                                                  iconSize: 85,
+                                                  icon: Column(
+                                                    children: [
+                                                      Icon(
+                                                        Icons
+                                                            .camera_alt_rounded,
+                                                        size: 60,
+                                                      ),
+                                                      Text("Camera"),
+                                                    ],
+                                                  ),
+                                                  onPressed: selectFromCamera,
                                                 ),
-                                                Text("Camera"),
+                                                IconButton(
+                                                  splashRadius: 50,
+                                                  iconSize: 85,
+                                                  icon: Column(
+                                                    children: [
+                                                      Icon(
+                                                        Icons.perm_media_sharp,
+                                                        size: 60,
+                                                      ),
+                                                      Text("Gallery"),
+                                                    ],
+                                                  ),
+                                                  onPressed: selectFromGallery,
+                                                )
                                               ],
                                             ),
-                                            onPressed: selectFromCamera,
                                           ),
-                                          IconButton(
-                                            splashRadius: 50,
-                                            iconSize: 85,
-                                            icon: Column(
-                                              children: [
-                                                Icon(
-                                                  Icons.perm_media_sharp,
-                                                  size: 60,
-                                                ),
-                                                Text("Gallery"),
-                                              ],
-                                            ),
-                                            onPressed: selectFromGallery,
-                                          )
-                                        ],
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                ),
-                              );
+                                    )
+                                  : null;
                             },
                             icon: _edit
                                 ? Stack(
@@ -196,24 +208,81 @@ class _ProfilePageState extends State<ProfilePage> {
                     children: [
                       Container(
                         margin: EdgeInsets.all(10),
-                        width: 100,
-                        child: TextButton(
-                          onPressed: () {
-                            setState(() {
-                              _edit = !_edit;
-                            });
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              _edit ? Icon(Icons.save) : Icon(Icons.edit),
-                              Text(
-                                _edit ? 'Save' : 'Edit',
-                                style: TextStyle(fontSize: 16),
+                        width: 170,
+                        child: _edit
+                            ? Row(
+                                children: [
+                                  TextButton(
+                                    onPressed: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                          title: Text('Save Changes?'),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                user.updateData();
+                                                setState(() {
+                                                  _edit = !_edit;
+                                                });
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: Text('Yes'),
+                                            ),
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: Text('No'),
+                                            )
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                    child: TombolActionProfilePage(
+                                      icon: Icons.save,
+                                      title: "Save",
+                                      icon_color: Colors.blue,
+                                      style_title: TextStyle(
+                                        color: Colors.blue,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        _edit = !_edit;
+                                      });
+                                    },
+                                    child: TombolActionProfilePage(
+                                      icon: Icons.cancel,
+                                      title: "Cancel",
+                                      icon_color: Colors.red,
+                                      style_title: TextStyle(
+                                        color: Colors.red,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  )
+                                ],
                               )
-                            ],
-                          ),
-                        ),
+                            : TextButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _edit = !_edit;
+                                  });
+                                },
+                                child: TombolActionProfilePage(
+                                  icon: Icons.edit,
+                                  title: "Edit",
+                                  icon_color: Colors.blue,
+                                  style_title: TextStyle(
+                                    color: Colors.blue,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -241,7 +310,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   ),
                                 ),
                                 onSubmitted: (value) {
-                                  user.setFirstName(value);
+                                  user.set_firstName_sementara(value);
                                 },
                               ),
                             ),
@@ -272,7 +341,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   ),
                                 ),
                                 onSubmitted: (value) {
-                                  user.setLastName(value);
+                                  user.set_lastName_sementara(value);
                                 },
                               ),
                             ),
@@ -286,8 +355,8 @@ class _ProfilePageState extends State<ProfilePage> {
                           child: Consumer<User>(
                             builder: (context, value, child) => TextField(
                               keyboardType: TextInputType.emailAddress,
-                              onChanged: (value) {
-                                user.setEmail(value);
+                              onSubmitted: (value) {
+                                user.set_email_sementara(value);
                               },
                               enabled: _edit,
                               controller: _edit
@@ -318,8 +387,8 @@ class _ProfilePageState extends State<ProfilePage> {
                             builder: (context, value, child) => TextField(
                               maxLength: 13,
                               keyboardType: TextInputType.phone,
-                              onChanged: (value) {
-                                user.setPhoneNumber(value);
+                              onSubmitted: (value) {
+                                user.set_phone_number_sementara(value);
                               },
                               enabled: _edit,
                               controller: _edit

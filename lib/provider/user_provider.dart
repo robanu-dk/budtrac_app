@@ -7,33 +7,56 @@ class User with ChangeNotifier {
   String _firstName = 'Data',
       _lastName = 'Provider',
       _email = 'dataProvider@gmail.com',
-      _phone_number = '082011633000';
+      _phone_number = '082011633000',
+      _firstName_sementara = '',
+      _lastName_sementara = '',
+      _email_sementara = '',
+      _phone_number_sementara = '';
+
+  void set_firstName_sementara(String firstName) {
+    _firstName_sementara = firstName;
+    notifyListeners();
+  }
+
+  void set_lastName_sementara(String lastName) {
+    _lastName_sementara = lastName;
+    notifyListeners();
+  }
+
+  void set_email_sementara(String email) {
+    _email_sementara = email;
+    notifyListeners();
+  }
+
+  void set_phone_number_sementara(String phone_number) {
+    _phone_number_sementara = phone_number;
+    notifyListeners();
+  }
+
+  String get firstName_sementara => _firstName_sementara;
+
+  String get lastName_sementara => _lastName_sementara;
+
+  String get email_sementara => _email_sementara;
+
+  String get phone_number_sementara => _phone_number_sementara;
 
   String get getFirstName => _firstName;
 
-  setFirstName(String firstName) {
-    _firstName = firstName;
-    notifyListeners();
-  }
-
   String get getLastName => _lastName;
-
-  setLastName(String lastName) {
-    _lastName = lastName;
-    notifyListeners();
-  }
 
   String get getEmail => _email;
 
-  setEmail(String email) {
-    _email = email;
-    notifyListeners();
-  }
-
   String get getPhoneNumber => _phone_number;
 
-  setPhoneNumber(phoneNumber) {
-    _phone_number = phoneNumber;
+  void updateData() {
+    _firstName =
+        (firstName_sementara != '') ? firstName_sementara : getFirstName;
+    _lastName = (lastName_sementara != '') ? lastName_sementara : getLastName;
+    _email = (email_sementara != '') ? email_sementara : getEmail;
+    _phone_number = (phone_number_sementara != '')
+        ? phone_number_sementara
+        : getPhoneNumber;
     notifyListeners();
   }
 

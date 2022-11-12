@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:moneytracker/provider/home_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../provider/home_provider.dart';
+import '../provider/user_provider.dart';
 import '../navigation/bottom_navigation.dart';
 import '../widget/modalMenu.dart';
 import '../widget/moneyValue.dart';
@@ -14,6 +15,8 @@ class Homepage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final home = Provider.of<HomeProvider>(context, listen: false);
+    final user = Provider.of<User>(context, listen: false);
+
     return Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
@@ -24,7 +27,7 @@ class Homepage extends StatelessWidget {
           ),
         ),
         body: ListView(children: [
-          CardWelcome('User'),
+          CardWelcome(user.getFirstName),
           Consumer<HomeProvider>(
             builder: (context, value, child) => Padding(
               padding: EdgeInsets.only(top: 20),
