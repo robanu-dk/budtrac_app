@@ -48,7 +48,7 @@ class _InputExpensePageState extends State<InputExpensePage> {
     label: "Payment Method",
     items: const ["Cash", "Debt", "Transfer"],
   );
-  String purchase = "Cash";
+  String purchase = "Transfer";
   DateTime date = DateTime.now();
 
   @override

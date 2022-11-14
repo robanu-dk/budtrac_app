@@ -6,8 +6,13 @@ import 'package:intl/intl.dart';
 import 'package:country_icons/country_icons.dart';
 import 'package:currency_picker/currency_picker.dart';
 import 'package:list_picker/list_picker.dart';
+import 'package:moneytracker/provider/category_provider.dart';
+import 'package:provider/provider.dart';
 
 import './home.dart';
+import '../provider/income_provider.dart';
+import '../widget/saveIncomeAlert.dart';
+import '../widget/alertNominalCategoryMustHaveValue.dart';
 
 class InputIncomePage extends StatefulWidget {
   InputIncomePage({Key? key}) : super(key: key);
@@ -17,31 +22,20 @@ class InputIncomePage extends StatefulWidget {
 }
 
 class _InputIncomePageState extends State<InputIncomePage> {
-  Map<String, dynamic> data = {"nominal": 0};
-  List<Map<String, dynamic>> category = [
-    {"name": "Salary", "image": "images/salary.png"},
-    {"name": "Business", "image": "images/business.png"},
-    {"name": "Extra Income", "image": "images/extra income.png"},
-    {"name": "Work", "image": "images/work.png"},
-    {"name": "Loan", "image": "images/loan.png"},
-    {"name": "Gifts", "image": "images/gifts.png"},
-    {"name": "Parent's Inheritance", "image": "images/inheritance.png"},
-    {"name": "Insurance", "image": "images/insurance.png"},
-    {"name": "Other", "image": "images/other.png"},
-  ];
   Map<String, dynamic> chosen_category = {};
-  String currencyCode = "IDR";
-  String currencySymbol = "Rp";
-  String countryFlagCode = "id";
   final listPickerField = ListPickerField(
     label: "Source of Income",
     items: const ["Salary", "Debt", "Transfer"],
   );
   String purchase = "Transfer";
   DateTime date = DateTime.now();
+  String nominal = '';
 
   @override
   Widget build(BuildContext context) {
+    final category = Provider.of<Category>(context, listen: false);
+    final income = Provider.of<Income>(context, listen: false);
+
     selectFromCamera() async {
       XFile? cameraFile = await ImagePicker().pickImage(
         source: ImageSource.camera,
@@ -76,6 +70,52 @@ class _InputIncomePageState extends State<InputIncomePage> {
         backgroundColor: Colors.pink[800],
       ),
       body: ListView(children: [
+        // Container(
+        //   color: Colors.pink[800],
+        //   height: 650,
+        //   child: Column(
+        //     crossAxisAlignment: CrossAxisAlignment.start,
+        //     children: [
+        //       Container(
+        //         width: 150,
+        //         padding: EdgeInsets.only(left: 10, top: 80),
+        //         child:
+        //             // TextField(
+        //             //   decoration: const InputDecoration(
+        //             //     label: Text(
+        //             //       'How Much?',
+        //             //       style: TextStyle(
+        //             //         fontFamily: "Roboto",
+        //             //         fontSize: 14,
+        //             //         color: Color.fromARGB(173, 199, 199, 199),
+        //             //       ),
+        //             //     ),
+        //             //   ),
+        //             // ),
+        //             Column(
+        //           crossAxisAlignment: CrossAxisAlignment.start,
+        //           children: [
+        //             Text(
+        //               'How Much?',
+        //               style: TextStyle(
+        //                 fontFamily: "Roboto",
+        //                 fontSize: 14,
+        //                 color: Color.fromARGB(173, 199, 199, 199),
+        //               ),
+        //             ),
+        //             TextField(
+        //               decoration: InputDecoration(
+        //                 border: InputBorder.none,
+        //               ),
+        //             )
+        //           ],
+        //         ),
+        //       ),
+        //       Text('data'),
+        //       Text('data')
+        //     ],
+        //   ),
+        // ),
         Card(
           shape: RoundedRectangleBorder(
               side: BorderSide(color: Colors.grey.shade300),
@@ -83,78 +123,81 @@ class _InputIncomePageState extends State<InputIncomePage> {
           child: Container(
             padding: EdgeInsets.only(left: 10),
             height: 80,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    Icon(Icons.monetization_on),
-                    Text(' Nominal'),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Container(
-                      width: 100,
-                      height: 22,
-                      child: TextField(
-                        autofocus: true,
-                        autocorrect: false,
-                        decoration: InputDecoration(
-                          prefixText: currencySymbol,
-                          hintStyle:
-                              TextStyle(color: Colors.grey, fontSize: 14),
-                        ),
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                        textAlign: TextAlign.end,
-                        keyboardType: TextInputType.number,
-                        onSubmitted: (value) {
-                          setState(() {}); // Don't forget to give code
-                        },
-                      ),
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).orientation ==
-                              Orientation.portrait
-                          ? MediaQuery.of(context).size.width * 0.26
-                          : MediaQuery.of(context).size.width * 0.13,
-                      child: IconButton(
-                        onPressed: () {
-                          showCurrencyPicker(
-                            context: context,
-                            showFlag: true,
-                            showCurrencyName: true,
-                            showCurrencyCode: true,
-                            onSelect: (Currency currency) {
-                              setState(() {
-                                currencyCode = currency.code;
-                                currencySymbol = currency.symbol;
-                                countryFlagCode =
-                                    (currency.code[0] + currency.code[1])
-                                        .toLowerCase();
-                              });
-                            },
-                          );
-                        },
-                        icon: Row(children: [
-                          Container(
-                            decoration: BoxDecoration(
-                                border:
-                                    Border.all(color: Colors.grey.shade300)),
-                            child: Image.asset(
-                              'icons/flags/png/${countryFlagCode}.png',
-                              package: 'country_icons',
-                              width: 20,
-                            ),
+            child: Consumer<Income>(
+              builder: (context, value, child) => Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Icon(Icons.monetization_on),
+                      Text(' Nominal'),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Container(
+                        width: 100,
+                        height: 22,
+                        child: TextField(
+                          autofocus: true,
+                          autocorrect: false,
+                          decoration: InputDecoration(
+                            prefixText: income.getCurrcencySymbol,
+                            hintStyle:
+                                TextStyle(color: Colors.grey, fontSize: 14),
                           ),
-                          Text(' ${currencyCode}'),
-                          Icon(Icons.arrow_drop_down)
-                        ]),
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.end,
+                          keyboardType: TextInputType.number,
+                          onSubmitted: (value) {
+                            setState(() {
+                              nominal = value;
+                            }); // Don't forget to give code
+                          },
+                        ),
                       ),
-                    )
-                  ],
-                ),
-              ],
+                      Container(
+                        width: MediaQuery.of(context).orientation ==
+                                Orientation.portrait
+                            ? MediaQuery.of(context).size.width * 0.22
+                            : MediaQuery.of(context).size.width * 0.13,
+                        child: IconButton(
+                          onPressed: () {
+                            showCurrencyPicker(
+                              context: context,
+                              showFlag: true,
+                              showCurrencyName: true,
+                              showCurrencyCode: true,
+                              onSelect: (Currency currency) {
+                                income.currency(
+                                    currencyCode: currency.code,
+                                    currencySymbol: currency.symbol,
+                                    countryFlagCode:
+                                        (currency.code[0] + currency.code[1])
+                                            .toLowerCase());
+                              },
+                            );
+                          },
+                          icon: Row(children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                  border:
+                                      Border.all(color: Colors.grey.shade300)),
+                              child: Image.asset(
+                                'icons/flags/png/${income.getCountryFlagCode}.png',
+                                package: 'country_icons',
+                                width: 20,
+                              ),
+                            ),
+                            Text(' ${income.getCurrcencyCode}'),
+                            Icon(Icons.arrow_drop_down)
+                          ]),
+                        ),
+                      )
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -199,7 +242,7 @@ class _InputIncomePageState extends State<InputIncomePage> {
                   .then(
                 (value) {
                   setState(() {
-                    purchase = value.toString();
+                    purchase = value == null ? purchase : value.toString();
                   });
                 },
               );
@@ -229,7 +272,7 @@ class _InputIncomePageState extends State<InputIncomePage> {
                       height: MediaQuery.of(context).size.height * 0.5,
                       child: GridView.count(
                         crossAxisCount: 4,
-                        children: category
+                        children: category.get_category_income
                             .map((data) => Card(
                                   shape: RoundedRectangleBorder(
                                     side:
@@ -378,6 +421,9 @@ class _InputIncomePageState extends State<InputIncomePage> {
                     ),
                     maxLines: 5,
                     minLines: 1,
+                    onSubmitted: (value) {
+                      income.setNote(value);
+                    },
                   ),
                 ),
               ],
@@ -464,17 +510,25 @@ class _InputIncomePageState extends State<InputIncomePage> {
             color: Colors.pink[800],
             shadowColor: Colors.white,
             shape: RoundedRectangleBorder(
-                side: BorderSide(color: Colors.grey.shade300),
-                borderRadius: BorderRadius.all(Radius.circular(50))),
+              side: BorderSide(color: Colors.grey.shade300),
+              borderRadius: BorderRadius.all(Radius.circular(50)),
+            ),
             child: IconButton(
               splashRadius: 160,
               iconSize: 28,
               onPressed: () {
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => Homepage(),
-                    ));
+                showDialog(
+                  context: context,
+                  builder: (context) =>
+                      (nominal == '' || chosen_category.length == 0)
+                          ? AlertCantSave()
+                          : SaveIncome(
+                              nominal: nominal,
+                              purchase: purchase,
+                              chosen_category: chosen_category,
+                              date: date,
+                            ),
+                );
               },
               icon: Row(
                 mainAxisAlignment: MainAxisAlignment.center,

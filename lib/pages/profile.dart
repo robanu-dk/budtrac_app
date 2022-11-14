@@ -221,6 +221,12 @@ class _ProfilePageState extends State<ProfilePage> {
                                           actions: [
                                             TextButton(
                                               onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: Text('No'),
+                                            ),
+                                            TextButton(
+                                              onPressed: () {
                                                 user.updateData();
                                                 setState(() {
                                                   _edit = !_edit;
@@ -229,12 +235,6 @@ class _ProfilePageState extends State<ProfilePage> {
                                               },
                                               child: Text('Yes'),
                                             ),
-                                            TextButton(
-                                              onPressed: () {
-                                                Navigator.of(context).pop();
-                                              },
-                                              child: Text('No'),
-                                            )
                                           ],
                                         ),
                                       );
@@ -309,7 +309,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     style: TextStyle(fontSize: 22),
                                   ),
                                 ),
-                                onSubmitted: (value) {
+                                onChanged: (value) {
                                   user.set_firstName_sementara(value);
                                 },
                               ),
@@ -340,7 +340,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     style: TextStyle(fontSize: 22),
                                   ),
                                 ),
-                                onSubmitted: (value) {
+                                onChanged: (value) {
                                   user.set_lastName_sementara(value);
                                 },
                               ),
@@ -355,7 +355,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           child: Consumer<User>(
                             builder: (context, value, child) => TextField(
                               keyboardType: TextInputType.emailAddress,
-                              onSubmitted: (value) {
+                              onChanged: (value) {
                                 user.set_email_sementara(value);
                               },
                               enabled: _edit,
@@ -387,7 +387,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             builder: (context, value, child) => TextField(
                               maxLength: 13,
                               keyboardType: TextInputType.phone,
-                              onSubmitted: (value) {
+                              onChanged: (value) {
                                 user.set_phone_number_sementara(value);
                               },
                               enabled: _edit,

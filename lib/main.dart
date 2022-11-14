@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../provider/category_provider.dart';
 import '../provider/user_provider.dart';
 import '../provider/home_provider.dart';
+import '../provider/income_provider.dart';
 import './pages/splash.dart';
 
 void main() {
@@ -19,7 +21,9 @@ class BudTrac extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => User(),
         ),
-        ChangeNotifierProvider(create: (context) => HomeProvider())
+        ChangeNotifierProvider(create: (context) => HomeProvider()),
+        ChangeNotifierProvider(create: (context) => Category()),
+        ChangeNotifierProvider(create: (context) => Income()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

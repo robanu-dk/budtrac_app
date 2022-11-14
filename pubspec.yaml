@@ -93,6 +93,9 @@ flutter:
     - family: DoppioOne
       fonts:
         - asset: fonts/DoppioOne-Regular.ttf
+    - family: Roboto
+      fonts:
+        - asset: fonts/Roboto-Regular.ttf
   #   - family: Schyler
   #     fonts:
   #       - asset: fonts/Schyler-Regular.ttf
