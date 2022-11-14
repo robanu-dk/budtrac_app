@@ -6,12 +6,14 @@ import 'package:intl/intl.dart';
 import 'package:country_icons/country_icons.dart';
 import 'package:currency_picker/currency_picker.dart';
 import 'package:list_picker/list_picker.dart';
-import 'package:moneytracker/provider/category_provider.dart';
 import 'package:provider/provider.dart';
 
 import './home.dart';
-import '../provider/income_provider.dart';
-import '../widget/saveIncomeAlert.dart';
+import '../provider/category_provider.dart';
+import '../provider/money_provider.dart';
+import '../widget/categoryCard.dart';
+import '../widget/walletCard.dart';
+import '../widget/saveMoneyDataAlert.dart';
 import '../widget/alertNominalCategoryMustHaveValue.dart';
 
 class InputIncomePage extends StatefulWidget {
@@ -34,7 +36,7 @@ class _InputIncomePageState extends State<InputIncomePage> {
   @override
   Widget build(BuildContext context) {
     final category = Provider.of<Category>(context, listen: false);
-    final income = Provider.of<Income>(context, listen: false);
+    final income = Provider.of<Money>(context, listen: false);
 
     selectFromCamera() async {
       XFile? cameraFile = await ImagePicker().pickImage(
@@ -123,7 +125,7 @@ class _InputIncomePageState extends State<InputIncomePage> {
           child: Container(
             padding: EdgeInsets.only(left: 10),
             height: 80,
-            child: Consumer<Income>(
+            child: Consumer<Money>(
               builder: (context, value, child) => Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -152,15 +154,15 @@ class _InputIncomePageState extends State<InputIncomePage> {
                           onSubmitted: (value) {
                             setState(() {
                               nominal = value;
-                            }); // Don't forget to give code
+                            });
                           },
                         ),
                       ),
                       Container(
                         width: MediaQuery.of(context).orientation ==
                                 Orientation.portrait
-                            ? MediaQuery.of(context).size.width * 0.22
-                            : MediaQuery.of(context).size.width * 0.13,
+                            ? MediaQuery.of(context).size.width * 0.24
+                            : MediaQuery.of(context).size.width * 0.15,
                         child: IconButton(
                           onPressed: () {
                             showCurrencyPicker(
@@ -178,20 +180,24 @@ class _InputIncomePageState extends State<InputIncomePage> {
                               },
                             );
                           },
-                          icon: Row(children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                  border:
-                                      Border.all(color: Colors.grey.shade300)),
-                              child: Image.asset(
-                                'icons/flags/png/${income.getCountryFlagCode}.png',
-                                package: 'country_icons',
-                                width: 20,
-                              ),
-                            ),
-                            Text(' ${income.getCurrcencyCode}'),
-                            Icon(Icons.arrow_drop_down)
-                          ]),
+                          icon: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: Colors.grey.shade300)),
+                                  child: Image.asset(
+                                    'icons/flags/png/${income.getCountryFlagCode}.png',
+                                    package: 'country_icons',
+                                    width: 18,
+                                  ),
+                                ),
+                                Text(' ${income.getCurrcencyCode}'),
+                                Icon(
+                                  Icons.arrow_drop_down,
+                                )
+                              ]),
                         ),
                       )
                     ],
@@ -211,29 +217,7 @@ class _InputIncomePageState extends State<InputIncomePage> {
                     ? 350
                     : 210,
             iconSize: 50,
-            icon: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    Icon(
-                      Icons.account_balance_wallet_rounded,
-                      size: 28,
-                    ),
-                    Text(' Wallet'),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Text(purchase),
-                    Icon(
-                      Icons.arrow_drop_down,
-                      size: 28,
-                    )
-                  ],
-                )
-              ],
-            ),
+            icon: WalletCard(purchase: purchase),
             onPressed: () {
               showPickerDialog(
                       context: context,
@@ -319,37 +303,7 @@ class _InputIncomePageState extends State<InputIncomePage> {
                 }),
               );
             },
-            icon: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    Icon(
-                      Icons.category,
-                      size: 28,
-                    ),
-                    Text(" Category"),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 8.0),
-                  child: Row(
-                    children: [
-                      if (chosen_category.isNotEmpty)
-                        CircleAvatar(
-                            backgroundColor: Colors.grey[300],
-                            child: Image.asset(
-                              chosen_category["image"],
-                              width: 30,
-                            )),
-                      if (chosen_category.isNotEmpty)
-                        Text(" ${chosen_category["name"]}"),
-                      if (chosen_category.isEmpty) const Text("Choose")
-                    ],
-                  ),
-                )
-              ],
-            ),
+            icon: CategoryCard(chosen_category: chosen_category),
           ),
         ),
         Card(
@@ -522,11 +476,12 @@ class _InputIncomePageState extends State<InputIncomePage> {
                   builder: (context) =>
                       (nominal == '' || chosen_category.length == 0)
                           ? AlertCantSave()
-                          : SaveIncome(
+                          : SaveData(
                               nominal: nominal,
                               purchase: purchase,
                               chosen_category: chosen_category,
                               date: date,
+                              income: true,
                             ),
                 );
               },

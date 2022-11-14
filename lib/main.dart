@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../provider/category_provider.dart';
 import '../provider/user_provider.dart';
 import '../provider/home_provider.dart';
-import '../provider/income_provider.dart';
+import 'provider/money_provider.dart';
 import './pages/splash.dart';
 
 void main() {
@@ -23,7 +23,7 @@ class BudTrac extends StatelessWidget {
         ),
         ChangeNotifierProvider(create: (context) => HomeProvider()),
         ChangeNotifierProvider(create: (context) => Category()),
-        ChangeNotifierProvider(create: (context) => Income()),
+        ChangeNotifierProvider(create: (context) => Money()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

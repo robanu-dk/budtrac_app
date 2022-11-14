@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 
-class Income with ChangeNotifier {
+class Money with ChangeNotifier {
   String _currencyCode = "IDR", _currencySymbol = "Rp", _countryFlagCode = "id";
   String _note = '', _media = '';
 
@@ -45,9 +45,10 @@ class Income with ChangeNotifier {
     required String category,
     required String date,
     String media = '',
+    required bool income,
   }) {
     Uri url = Uri.parse(
-      "https://bud-track-4652c-default-rtdb.firebaseio.com/income.json",
+      "https://bud-track-4652c-default-rtdb.firebaseio.com/money.json",
     );
     http.post(
       url,
@@ -59,7 +60,8 @@ class Income with ChangeNotifier {
         'category': category,
         'date': date,
         'note': getNote,
-        'media': media
+        'media': media,
+        'income': income
       }),
     );
   }

@@ -6,8 +6,15 @@ import 'package:country_icons/country_icons.dart';
 import 'package:intl/intl.dart';
 import 'package:list_picker/list_picker.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 import './home.dart';
+import '../widget/walletCard.dart';
+import '../widget/categoryCard.dart';
+import '../widget/saveMoneyDataAlert.dart';
+import '../widget/alertNominalCategoryMustHaveValue.dart';
+import '../provider/money_provider.dart';
+import '../provider/category_provider.dart';
 
 class InputExpensePage extends StatefulWidget {
   InputExpensePage({Key? key}) : super(key: key);
@@ -17,42 +24,21 @@ class InputExpensePage extends StatefulWidget {
 }
 
 class _InputExpensePageState extends State<InputExpensePage> {
-  List<Map<String, dynamic>> category = [
-    {"name": "Food", "image": "images/food.png"},
-    {"name": "Drink", "image": "images/drink.png"},
-    {"name": "Food & Drink", "image": "images/food and drink.png"},
-    {"name": "Shopping", "image": "images/shopping.png"},
-    {"name": "Transport", "image": "images/transport.png"},
-    {"name": "Home", "image": "images/home.png"},
-    {"name": "Bills & Fees", "image": "images/bill.png"},
-    {"name": "Netflix", "image": "images/netflix.png"},
-    {"name": "Game Payment", "image": "images/game.png"},
-    {"name": "Car", "image": "images/car.png"},
-    {"name": "Travel", "image": "images/travel.png"},
-    {"name": "Family & Personal", "image": "images/family and personal.png"},
-    {"name": "Healthcare", "image": "images/healthcare.png"},
-    {"name": "Education", "image": "images/education.png"},
-    {"name": "Groceries", "image": "images/groceries.png"},
-    {"name": "Gifts", "image": "images/gifts.png"},
-    {"name": "Sport & Hobbies", "image": "images/sport.png"},
-    {"name": "Cosmetics", "image": "images/cosmetic.png"},
-    {"name": "Work", "image": "images/work.png"},
-    {"name": "Other", "image": "images/other.png"},
-  ];
-  Map<String, dynamic> data = {"nominal": 0};
   Map<String, dynamic> chosen_category = {};
-  String currencyCode = "IDR";
-  String currencySymbol = "Rp";
-  String countryFlagCode = "id";
+
   final listPickerField = ListPickerField(
     label: "Payment Method",
     items: const ["Cash", "Debt", "Transfer"],
   );
   String purchase = "Transfer";
   DateTime date = DateTime.now();
+  String nominal = '';
 
   @override
   Widget build(BuildContext context) {
+    final money = Provider.of<Money>(context, listen: false);
+    final category = Provider.of<Category>(context, listen: false);
+
     selectFromCamera() async {
       XFile? cameraFile = await ImagePicker().pickImage(
         source: ImageSource.camera,
@@ -103,67 +89,73 @@ class _InputExpensePageState extends State<InputExpensePage> {
                     Text(' Nominal'),
                   ],
                 ),
-                Row(
-                  children: [
-                    Container(
-                      width: 100,
-                      height: 22,
-                      child: TextField(
-                        autofocus: true,
-                        autocorrect: false,
-                        decoration: InputDecoration(
-                          prefixText: currencySymbol,
-                          hintStyle:
-                              TextStyle(color: Colors.grey, fontSize: 14),
-                        ),
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                        textAlign: TextAlign.end,
-                        keyboardType: TextInputType.number,
-                        onSubmitted: (value) {
-                          setState(() {}); // Don't forget to give code
-                        },
-                      ),
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).orientation ==
-                              Orientation.portrait
-                          ? MediaQuery.of(context).size.width * 0.26
-                          : MediaQuery.of(context).size.width * 0.13,
-                      child: IconButton(
-                        onPressed: () {
-                          showCurrencyPicker(
-                            context: context,
-                            showFlag: true,
-                            showCurrencyName: true,
-                            showCurrencyCode: true,
-                            onSelect: (Currency currency) {
-                              setState(() {
-                                currencyCode = currency.code;
-                                currencySymbol = currency.symbol;
-                                countryFlagCode =
-                                    (currencyCode[0] + currencyCode[1])
-                                        .toLowerCase();
-                              });
-                            },
-                          );
-                        },
-                        icon: Row(children: [
-                          Container(
-                            decoration: BoxDecoration(
-                                border:
-                                    Border.all(color: Colors.grey.shade300)),
-                            child: Image.asset(
-                              'icons/flags/png/${countryFlagCode}.png',
-                              package: 'country_icons',
-                              width: 20,
-                            ),
+                Consumer<Money>(
+                  builder: (context, value, child) => Row(
+                    children: [
+                      Container(
+                        width: 100,
+                        height: 22,
+                        child: TextField(
+                          autofocus: true,
+                          autocorrect: false,
+                          decoration: InputDecoration(
+                            prefixText: money.getCurrcencySymbol,
+                            hintStyle:
+                                TextStyle(color: Colors.grey, fontSize: 14),
                           ),
-                          Text(' ${currencyCode}'),
-                          Icon(Icons.arrow_drop_down)
-                        ]),
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.end,
+                          keyboardType: TextInputType.number,
+                          onSubmitted: (value) {
+                            setState(() {
+                              nominal = value;
+                            });
+                          },
+                        ),
                       ),
-                    )
-                  ],
+                      Container(
+                        width: MediaQuery.of(context).orientation ==
+                                Orientation.portrait
+                            ? MediaQuery.of(context).size.width * 0.24
+                            : MediaQuery.of(context).size.width * 0.15,
+                        child: IconButton(
+                          onPressed: () {
+                            showCurrencyPicker(
+                              context: context,
+                              showFlag: true,
+                              showCurrencyName: true,
+                              showCurrencyCode: true,
+                              onSelect: (Currency currency) {
+                                money.currency(
+                                  currencyCode: currency.code,
+                                  currencySymbol: currency.symbol,
+                                  countryFlagCode:
+                                      (currency.code[0] + currency.code[1])
+                                          .toLowerCase(),
+                                );
+                              },
+                            );
+                          },
+                          icon: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: Colors.grey.shade300)),
+                                  child: Image.asset(
+                                    'icons/flags/png/${money.getCountryFlagCode}.png',
+                                    package: 'country_icons',
+                                    width: 20,
+                                  ),
+                                ),
+                                Text(' ${money.getCurrcencyCode}'),
+                                Icon(Icons.arrow_drop_down)
+                              ]),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -179,29 +171,7 @@ class _InputExpensePageState extends State<InputExpensePage> {
                     ? 350
                     : 210,
             iconSize: 50,
-            icon: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    Icon(
-                      Icons.account_balance_wallet_rounded,
-                      size: 28,
-                    ),
-                    Text(' Wallet'),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Text(purchase),
-                    Icon(
-                      Icons.arrow_drop_down,
-                      size: 28,
-                    )
-                  ],
-                )
-              ],
-            ),
+            icon: WalletCard(purchase: purchase),
             onPressed: () {
               showPickerDialog(
                       context: context,
@@ -240,7 +210,7 @@ class _InputExpensePageState extends State<InputExpensePage> {
                       height: MediaQuery.of(context).size.height * 0.5,
                       child: GridView.count(
                         crossAxisCount: 4,
-                        children: category
+                        children: category.get_category_expense
                             .map((data) => Card(
                                   shape: RoundedRectangleBorder(
                                     side:
@@ -283,37 +253,7 @@ class _InputExpensePageState extends State<InputExpensePage> {
                 }),
               );
             },
-            icon: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    Icon(
-                      Icons.category,
-                      size: 28,
-                    ),
-                    Text(" Category"),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 8.0),
-                  child: Row(
-                    children: [
-                      if (chosen_category.isNotEmpty)
-                        CircleAvatar(
-                            backgroundColor: Colors.grey[300],
-                            child: Image.asset(
-                              chosen_category["image"],
-                              width: 30,
-                            )),
-                      if (chosen_category.isNotEmpty)
-                        Text(" ${chosen_category["name"]}"),
-                      if (chosen_category.isEmpty) const Text("Choose")
-                    ],
-                  ),
-                )
-              ],
-            ),
+            icon: CategoryCard(chosen_category: chosen_category),
           ),
         ),
         Card(
@@ -477,11 +417,19 @@ class _InputExpensePageState extends State<InputExpensePage> {
               splashRadius: 160,
               iconSize: 28,
               onPressed: () {
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => Homepage(),
-                    ));
+                showDialog(
+                  context: context,
+                  builder: (context) =>
+                      (nominal == '' || chosen_category.length == 0)
+                          ? AlertCantSave()
+                          : SaveData(
+                              nominal: nominal,
+                              purchase: purchase,
+                              chosen_category: chosen_category,
+                              date: date,
+                              income: false,
+                            ),
+                );
               },
               icon: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
