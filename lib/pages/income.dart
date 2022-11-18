@@ -13,8 +13,8 @@ import '../provider/category_provider.dart';
 import '../provider/money_provider.dart';
 import '../widget/categoryCard.dart';
 import '../widget/walletCard.dart';
-import '../widget/saveMoneyDataAlert.dart';
-import '../widget/alertNominalCategoryMustHaveValue.dart';
+import '../widget/saveDataAlertIncomeExpense.dart';
+import '../widget/alertCannotSave.dart';
 
 class InputIncomePage extends StatefulWidget {
   InputIncomePage({Key? key}) : super(key: key);
@@ -39,11 +39,13 @@ class _InputIncomePageState extends State<InputIncomePage> {
     final income = Provider.of<Money>(context, listen: false);
 
     selectFromCamera() async {
-      XFile? cameraFile = await ImagePicker().pickImage(
+      final cameraFile = await ImagePicker().pickImage(
         source: ImageSource.camera,
         // maxHeight: 50.0,
         // maxWidth: 50.0,
       );
+      final a = cameraFile?.saveTo('../images');
+      print(a);
       setState(() {});
     }
 
@@ -475,7 +477,9 @@ class _InputIncomePageState extends State<InputIncomePage> {
                   context: context,
                   builder: (context) =>
                       (nominal == '' || chosen_category.length == 0)
-                          ? AlertCantSave()
+                          ? AlertCantSave(
+                              incomeExpense: true,
+                            )
                           : SaveData(
                               nominal: nominal,
                               purchase: purchase,

@@ -60,11 +60,11 @@ class User with ChangeNotifier {
     notifyListeners();
   }
 
-  void regist(
-      String firstName, String lastName, String email, String password) {
+  Future<http.Response> regist(
+      String firstName, String lastName, String email, String password) async {
     Uri url = Uri.parse(
         'https://bud-track-4652c-default-rtdb.firebaseio.com/user.json');
-    http.post(
+    return await http.post(
       url,
       body: jsonEncode(
         {

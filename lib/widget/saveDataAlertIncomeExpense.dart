@@ -5,6 +5,12 @@ import '../provider/money_provider.dart';
 import '../pages/home.dart';
 
 class SaveData extends StatelessWidget {
+  final String nominal;
+  final String purchase;
+  final Map<String, dynamic> chosen_category;
+  final DateTime date;
+  final bool income;
+
   const SaveData({
     Key? key,
     required this.nominal,
@@ -14,15 +20,10 @@ class SaveData extends StatelessWidget {
     required this.income,
   }) : super(key: key);
 
-  final String nominal;
-  final String purchase;
-  final Map<String, dynamic> chosen_category;
-  final DateTime date;
-  final bool income;
-
   @override
   Widget build(BuildContext context) {
     final income = Provider.of<Money>(context, listen: false);
+
     return AlertDialog(
       title: Text("Are you sure to save the data?"),
       actions: [
@@ -34,12 +35,13 @@ class SaveData extends StatelessWidget {
         TextButton(
           onPressed: () {
             income.postData(
-                idUser: 'idUser',
-                nominal: nominal,
-                wallet: purchase,
-                category: chosen_category['name'],
-                date: date.toString(),
-                income: this.income);
+              idUser: 'idUser',
+              nominal: nominal,
+              wallet: purchase,
+              category: chosen_category['name'],
+              date: date.toString(),
+              income: this.income,
+            );
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text("Save Successfull!!"),

@@ -11,8 +11,8 @@ import 'package:provider/provider.dart';
 import './home.dart';
 import '../widget/walletCard.dart';
 import '../widget/categoryCard.dart';
-import '../widget/saveMoneyDataAlert.dart';
-import '../widget/alertNominalCategoryMustHaveValue.dart';
+import '../widget/saveDataAlertIncomeExpense.dart';
+import '../widget/alertCannotSave.dart';
 import '../provider/money_provider.dart';
 import '../provider/category_provider.dart';
 
@@ -180,7 +180,9 @@ class _InputExpensePageState extends State<InputExpensePage> {
                   .then(
                 (value) {
                   setState(() {
-                    purchase = value.toString();
+                    (value == null)
+                        ? purchase = purchase
+                        : purchase = value.toString();
                   });
                 },
               );
@@ -421,7 +423,9 @@ class _InputExpensePageState extends State<InputExpensePage> {
                   context: context,
                   builder: (context) =>
                       (nominal == '' || chosen_category.length == 0)
-                          ? AlertCantSave()
+                          ? AlertCantSave(
+                              incomeExpense: true,
+                            )
                           : SaveData(
                               nominal: nominal,
                               purchase: purchase,

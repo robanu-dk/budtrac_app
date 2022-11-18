@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../provider/target_limit_provider.dart';
 import '../provider/category_provider.dart';
 import '../provider/user_provider.dart';
 import '../provider/home_provider.dart';
@@ -24,6 +25,7 @@ class BudTrac extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => HomeProvider()),
         ChangeNotifierProvider(create: (context) => Category()),
         ChangeNotifierProvider(create: (context) => Money()),
+        ChangeNotifierProvider(create: (context) => TargetLimit()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

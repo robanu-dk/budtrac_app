@@ -4,8 +4,18 @@ import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 
 class Money with ChangeNotifier {
-  String _currencyCode = "IDR", _currencySymbol = "Rp", _countryFlagCode = "id";
+  String _currencyCode = "IDR",
+      _currencySymbol = "Rp",
+      _countryFlagCode = "id",
+      _nominal = '';
   String _note = '', _media = '';
+
+  void setNominal(String value) {
+    _nominal = value;
+    notifyListeners();
+  }
+
+  String get getNominal => _nominal;
 
   void currency({
     required String currencyCode,
@@ -38,7 +48,7 @@ class Money with ChangeNotifier {
 
   String get getMedia => _media;
 
-  void postData({
+  Future<http.Response> postData({
     required String idUser,
     required String nominal,
     required String wallet,
@@ -46,13 +56,14 @@ class Money with ChangeNotifier {
     required String date,
     String media = '',
     required bool income,
-  }) {
+  }) async {
     Uri url = Uri.parse(
       "https://bud-track-4652c-default-rtdb.firebaseio.com/money.json",
     );
-    http.post(
+    return await http.post(
       url,
       body: jsonEncode({
+        'createdAt': DateTime.now().toString(),
         'idUser': idUser,
         'nominal': nominal,
         'currency': getCurrcencyCode,
