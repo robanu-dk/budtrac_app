@@ -1,32 +1,49 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../provider/history_provider.dart';
 
 class History extends StatelessWidget {
-  String title, avatarImage, dateTime, currency_symbol;
-  bool income;
-  int value;
+  Map<String, dynamic> data;
 
-  History(this.title, this.avatarImage, this.dateTime, this.value,
-      this.currency_symbol, this.income);
+  History(this.data);
 
   @override
   Widget build(BuildContext context) {
+    final history = Provider.of<HistoryProvider>(context, listen: false);
+    final category = history.getAllCategory;
+
     return ListTile(
       leading: CircleAvatar(
         backgroundColor: Colors.black,
         child: Image.asset(
-          this.avatarImage,
+          category.firstWhere((e) => e['name'] == data['name'])['image'],
           width: 30,
         ),
       ),
-      title: Text(this.title),
-      subtitle: Text(this.dateTime),
+      title: Text(data['name']),
+      subtitle: Text(data['date']),
       trailing: Text(
-        (this.income ? '+ ' : '- ') + '${this.currency_symbol} ${this.value}',
-        style: this.income
+        (data["income"] ? '+ ' : '- ') +
+            '${data["currency_symbol"]} ${data["value"]}',
+        style: data["income"]
             ? TextStyle(color: Colors.green)
             : TextStyle(color: Colors.red),
       ),
-      onTap: () {},
+      onTap: () {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            insetPadding: EdgeInsets.all(10),
+            title: Text('Detail Information'),
+            content: Container(
+                width: MediaQuery.of(context).size.width * 1,
+                height: MediaQuery.of(context).size.height * 1,
+                child: Text('sd')),
+            actions: [Text('sd')],
+          ),
+        );
+      },
       // onLongPress: () {},
       // autofocus: true,
       hoverColor: Colors.blueGrey[100],
