@@ -15,7 +15,6 @@ class Homepage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final home = Provider.of<HomeProvider>(context, listen: false);
-    final user = Provider.of<User>(context, listen: false);
 
     return Scaffold(
         appBar: AppBar(
@@ -27,7 +26,9 @@ class Homepage extends StatelessWidget {
           ),
         ),
         body: ListView(children: [
-          CardWelcome(user.getFirstName),
+          Consumer<User>(
+            builder: (context, value, child) => CardWelcome(value.getFirstName),
+          ),
           Consumer<HomeProvider>(
             builder: (context, value, child) => Padding(
               padding: EdgeInsets.only(top: 20),

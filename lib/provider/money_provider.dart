@@ -10,6 +10,14 @@ class Money with ChangeNotifier {
       _nominal = '';
   String _note = '', _media = '';
 
+  var _token, _userId;
+
+  void updateData(tokenData, uid) {
+    _token = tokenData;
+    _userId = uid;
+    notifyListeners();
+  }
+
   void setNominal(String value) {
     _nominal = value;
     notifyListeners();
@@ -49,7 +57,6 @@ class Money with ChangeNotifier {
   String get getMedia => _media;
 
   Future<http.Response> postData({
-    required String idUser,
     required String nominal,
     required String wallet,
     required String category,
@@ -58,13 +65,13 @@ class Money with ChangeNotifier {
     required bool income,
   }) async {
     Uri url = Uri.parse(
-      "https://bud-track-4652c-default-rtdb.firebaseio.com/money.json",
+      "https://bud-track-4652c-default-rtdb.firebaseio.com/money.json?auth=$_token",
     );
     return await http.post(
       url,
       body: jsonEncode({
         'createdAt': DateTime.now().toString(),
-        'idUser': idUser,
+        'idUser': _userId,
         'nominal': nominal,
         'currency': getCurrcencyCode,
         'wallet': wallet,

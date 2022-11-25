@@ -35,7 +35,6 @@ class SaveData extends StatelessWidget {
         TextButton(
           onPressed: () {
             income.postData(
-              idUser: 'idUser',
               nominal: nominal,
               wallet: purchase,
               category: chosen_category['name'],

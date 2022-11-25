@@ -12,6 +12,14 @@ class TargetLimit with ChangeNotifier {
 
   DateTime _timeStart = DateTime.now(), _timeEnd = DateTime.now();
 
+  var _token, _userId;
+
+  void updateData(token, uid) {
+    _token = token;
+    _userId = uid;
+    notifyListeners();
+  }
+
   void setNominal(String value) {
     _nominal = value;
     notifyListeners();
@@ -60,14 +68,14 @@ class TargetLimit with ChangeNotifier {
     required bool target,
   }) {
     Uri url = Uri.parse(
-      "https://bud-track-4652c-default-rtdb.firebaseio.com/targetLimit.json",
+      "https://bud-track-4652c-default-rtdb.firebaseio.com/targetLimit.json?auth=$_token",
     );
 
     http.post(
       url,
       body: jsonEncode({
         "createdAt": DateTime.now().toString(),
-        "idUser": 'idUser',
+        "idUser": _userId,
         "nominal": getNominal,
         "currency": getCurrencyCode,
         "dateStart": getTimeStart.toString(),

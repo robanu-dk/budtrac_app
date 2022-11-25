@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../provider/history_provider.dart';
+import '../widget/detailHistory.dart';
 
 class History extends StatelessWidget {
   Map<String, dynamic> data;
@@ -11,13 +12,14 @@ class History extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final history = Provider.of<HistoryProvider>(context, listen: false);
-    final category = history.getAllCategory;
+    final category_image = history.getAllCategory
+        .firstWhere((e) => e["name"] == data["name"])["image"];
 
     return ListTile(
       leading: CircleAvatar(
         backgroundColor: Colors.black,
         child: Image.asset(
-          category.firstWhere((e) => e['name'] == data['name'])['image'],
+          category_image,
           width: 30,
         ),
       ),
@@ -33,15 +35,7 @@ class History extends StatelessWidget {
       onTap: () {
         showDialog(
           context: context,
-          builder: (context) => AlertDialog(
-            insetPadding: EdgeInsets.all(10),
-            title: Text('Detail Information'),
-            content: Container(
-                width: MediaQuery.of(context).size.width * 1,
-                height: MediaQuery.of(context).size.height * 1,
-                child: Text('sd')),
-            actions: [Text('sd')],
-          ),
+          builder: (context) => DetailHistory(data, category_image),
         );
       },
       // onLongPress: () {},

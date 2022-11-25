@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:moneytracker/pages/regist.dart';
+import 'package:provider/provider.dart';
+
 import './home.dart';
 import './regist.dart';
+import '../provider/user_provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -14,6 +16,8 @@ class LoginPage extends StatefulWidget {
 class _MyWidgetState extends State<LoginPage> {
   Color icon_eye_color = Colors.grey;
   bool hide = true;
+  final email = TextEditingController();
+  final password = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -68,6 +72,7 @@ class _MyWidgetState extends State<LoginPage> {
                     padding: EdgeInsets.only(
                         top: 30, bottom: 20, left: 40, right: 40),
                     child: TextField(
+                      controller: email,
                       autocorrect: false,
                       decoration: InputDecoration(
                           focusedBorder: OutlineInputBorder(
@@ -79,6 +84,7 @@ class _MyWidgetState extends State<LoginPage> {
                   Padding(
                     padding: EdgeInsets.only(bottom: 20, left: 40, right: 40),
                     child: TextField(
+                      controller: password,
                       autocorrect: false,
                       obscureText: hide,
                       maxLength: 32,
@@ -112,10 +118,10 @@ class _MyWidgetState extends State<LoginPage> {
                         borderRadius: BorderRadius.all(Radius.circular(40))),
                     color: Colors.pink[800],
                     child: TextButton(
-                      onPressed: () => Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: ((context) => Homepage()))),
+                      onPressed: () {
+                        Provider.of<User>(context, listen: false)
+                            .login(email.text, password.text);
+                      },
                       child: Container(
                         height: 30,
                         width: 300,

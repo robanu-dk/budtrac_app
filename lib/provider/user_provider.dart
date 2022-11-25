@@ -4,14 +4,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
 class User with ChangeNotifier {
-  String _firstName = 'Data',
-      _lastName = 'Provider',
-      _email = 'dataProvider@gmail.com',
-      _phone_number = '082011633000',
+  String _firstName = '',
+      _lastName = '',
+      _email = '',
+      _phone_number = '',
       _firstName_sementara = '',
       _lastName_sementara = '',
       _email_sementara = '',
       _phone_number_sementara = '';
+
+  var _idToken, _userId;
+  DateTime _expireTime = DateTime.now();
+
+  var _tempIdToken, _tempUserId;
+  DateTime _tempExpireTime = DateTime.now();
 
   void set_firstName_sementara(String firstName) {
     _firstName_sementara = firstName;
@@ -60,12 +66,57 @@ class User with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<http.Response> regist(
+  void setDataUser(String email, String token) {
+    final data = http
+        .get(
+      Uri.parse(
+          'https://bud-track-4652c-default-rtdb.firebaseio.com/user.json?auth=$token'),
+    )
+        .then((value) {
+      final bodyResponse = jsonDecode(value.body) as Map<String, dynamic>;
+      bodyResponse.forEach((key, value) {
+        if (value['email'] == email) {
+          _email = email;
+          _firstName = value['firstName'];
+          _lastName = value["lastName"];
+        }
+      });
+    });
+    notifyListeners();
+  }
+
+  Future<void> tempData() async {
+    _idToken = _tempIdToken;
+    _userId = _tempUserId;
+    _expireTime = _tempExpireTime;
+    notifyListeners();
+  }
+
+  get token {
+    if (_idToken != null &&
+        _expireTime != null &&
+        DateTime.now().isBefore(_expireTime)) {
+      return _idToken;
+    }
+
+    return null;
+  }
+
+  get uid {
+    if (_idToken != null &&
+        _expireTime != null &&
+        DateTime.now().isBefore(_expireTime)) {
+      return _userId;
+    }
+
+    return null;
+  }
+
+  Future<void> postData(
       String firstName, String lastName, String email, String password) async {
-    Uri url = Uri.parse(
-        'https://bud-track-4652c-default-rtdb.firebaseio.com/user.json');
-    return await http.post(
-      url,
+    await http.post(
+      Uri.parse(
+          'https://bud-track-4652c-default-rtdb.firebaseio.com/user.json?auth=$token'),
       body: jsonEncode(
         {
           "firstName": firstName,
@@ -74,9 +125,82 @@ class User with ChangeNotifier {
           "email": email,
           "password": password,
           "createdAt": DateTime.now().toString(),
-          "updatedAt": DateTime.now().toString()
+          "updatedAt": DateTime.now().toString(),
         },
       ),
     );
+    _firstName = firstName;
+    _lastName = lastName;
+    _email = email;
+  }
+
+  Future<void> regist(
+      String firstName, String lastName, String email, String password) async {
+    Uri url = Uri.parse(
+        'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAEA_PvRUC0fHLcH6S_XRUJos_B5RQ7mXI');
+    try {
+      var response = await http.post(
+        url,
+        body: jsonEncode(
+          {
+            "email": email,
+            "password": password,
+            "returnSecureToken": true,
+          },
+        ),
+      );
+      var responseBody = jsonDecode(response.body);
+
+      if (responseBody['error'] != null) {
+        throw responseBody['error']['message'];
+      }
+
+      _tempUserId = responseBody["localId"];
+      _tempIdToken = responseBody["idToken"];
+      _tempExpireTime = DateTime.now().add(
+        Duration(
+          seconds: int.parse(responseBody["expiresIn"]),
+        ),
+      );
+      tempData();
+      postData(firstName, lastName, email, password);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<void> login(String email, String password) async {
+    Uri url = Uri.parse(
+        'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAEA_PvRUC0fHLcH6S_XRUJos_B5RQ7mXI');
+    try {
+      var response = await http.post(
+        url,
+        body: jsonEncode(
+          {
+            "email": email,
+            "password": password,
+            "returnSecureToken": true,
+          },
+        ),
+      );
+      var responseBody = jsonDecode(response.body);
+
+      if (responseBody['error'] != null) {
+        throw responseBody['error']['message'];
+      }
+
+      setDataUser(responseBody['email'], responseBody['idToken']);
+
+      _tempUserId = responseBody["localId"];
+      _tempIdToken = responseBody["idToken"];
+      _tempExpireTime = DateTime.now().add(
+        Duration(
+          seconds: int.parse(responseBody["expiresIn"]),
+        ),
+      );
+      tempData();
+    } catch (error) {
+      throw error;
+    }
   }
 }

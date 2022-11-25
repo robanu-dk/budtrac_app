@@ -17,6 +17,7 @@ class _RegistPageState extends State<RegistPage> {
   final lastName = TextEditingController();
   final email = TextEditingController();
   final password = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     final regist = Provider.of<User>(context, listen: false);

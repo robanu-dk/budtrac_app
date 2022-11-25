@@ -20,14 +20,24 @@ class BudTrac extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (context) => User(),
-        ),
+        ChangeNotifierProvider(create: (context) => User()),
         ChangeNotifierProvider(create: (context) => HomeProvider()),
         ChangeNotifierProvider(create: (context) => Category()),
-        ChangeNotifierProvider(create: (context) => Money()),
-        ChangeNotifierProvider(create: (context) => TargetLimit()),
-        ChangeNotifierProvider(create: (context) => HistoryProvider()),
+        ChangeNotifierProxyProvider<User, Money>(
+          create: (context) => Money(),
+          update: (context, user, money) =>
+              money!..updateData(user.token, user.uid),
+        ),
+        ChangeNotifierProxyProvider<User, TargetLimit>(
+          create: (context) => TargetLimit(),
+          update: (context, user, targetLimit) =>
+              targetLimit!..updateData(user.token, user.uid),
+        ),
+        ChangeNotifierProxyProvider<User, HistoryProvider>(
+          create: (context) => HistoryProvider(),
+          update: (context, user, historyProvider) =>
+              historyProvider!..updateData(user.token, user.uid),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
