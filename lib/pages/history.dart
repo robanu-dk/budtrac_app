@@ -11,8 +11,6 @@ import '../widget/historyTile.dart';
 class HistoryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final history_data = Provider.of<HistoryProvider>(context, listen: false);
-
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -55,17 +53,19 @@ class HistoryPage extends StatelessWidget {
               TotalMoneyAndDuration(
                   "Income & Expense", "Rp 200.000", "12/8/2021", "9/8/2022"),
               HistoryBar(),
-              Column(
-                children: history_data.getHistoryData.map((data) {
-                  return Column(
-                    children: [
-                      History(
-                        data,
-                      ),
-                      HistoryBar()
-                    ],
-                  );
-                }).toList(),
+              Consumer<HistoryProvider>(
+                builder: (context, value, child) => Column(
+                  children: value.getHistoryData.map((data) {
+                    return Column(
+                      children: [
+                        History(
+                          data: data,
+                        ),
+                        HistoryBar()
+                      ],
+                    );
+                  }).toList(),
+                ),
               )
             ]),
             ListView(
@@ -73,20 +73,22 @@ class HistoryPage extends StatelessWidget {
                 TotalMoneyAndDuration(
                     "Income", "Rp 200.000", "12/8/2021", "8/8/2022"),
                 HistoryBar(),
-                Column(
-                  children: history_data.getHistoryData
-                      .where((e) => e['income'])
-                      .toList()
-                      .map((data) {
-                    return Column(
-                      children: [
-                        History(
-                          data,
-                        ),
-                        HistoryBar()
-                      ],
-                    );
-                  }).toList(),
+                Consumer<HistoryProvider>(
+                  builder: (context, value, child) => Column(
+                    children: value.getHistoryData
+                        .where((e) => e['income'])
+                        .toList()
+                        .map((data) {
+                      return Column(
+                        children: [
+                          History(
+                            data: data,
+                          ),
+                          HistoryBar()
+                        ],
+                      );
+                    }).toList(),
+                  ),
                 )
               ],
             ),
@@ -95,20 +97,23 @@ class HistoryPage extends StatelessWidget {
                 TotalMoneyAndDuration(
                     "Expense", "Rp 200.000", "1/8/2022", "9/8/2022"),
                 HistoryBar(),
-                Column(
-                    children: history_data.getHistoryData
+                Consumer<HistoryProvider>(
+                  builder: (context, value, child) => Column(
+                    children: value.getHistoryData
                         .where((e) => !e["income"])
                         .toList()
                         .map((data) {
-                  return Column(
-                    children: [
-                      History(
-                        data,
-                      ),
-                      HistoryBar()
-                    ],
-                  );
-                }).toList())
+                      return Column(
+                        children: [
+                          History(
+                            data: data,
+                          ),
+                          HistoryBar()
+                        ],
+                      );
+                    }).toList(),
+                  ),
+                )
               ],
             ),
           ]),

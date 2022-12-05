@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:getwidget/getwidget.dart';
 
-import './home.dart';
 import './regist.dart';
 import '../provider/user_provider.dart';
 
@@ -120,7 +120,32 @@ class _MyWidgetState extends State<LoginPage> {
                     child: TextButton(
                       onPressed: () {
                         Provider.of<User>(context, listen: false)
-                            .login(email.text, password.text);
+                            .login(email.text, password.text)
+                            .then(
+                          (error) {
+                            return (error != '')
+                                ? showDialog(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                      title: Text('Error (belum disetting)'),
+                                      actions: [
+                                        TextButton(
+                                            onPressed: () =>
+                                                Navigator.of(context).pop(),
+                                            child: Text('OK'))
+                                      ],
+                                    ),
+                                  )
+                                : null;
+                          },
+                        );
+                        // showDialog(
+                        //   context: context,
+                        //   builder: (context) => GFLoader(
+                        //     type: GFLoaderType.android,
+                        //     size: 100,
+                        //   ),
+                        // );
                       },
                       child: Container(
                         height: 30,

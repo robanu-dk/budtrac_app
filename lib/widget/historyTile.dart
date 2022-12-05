@@ -6,14 +6,13 @@ import '../widget/detailHistory.dart';
 
 class History extends StatelessWidget {
   Map<String, dynamic> data;
-
-  History(this.data);
+  History({required this.data});
 
   @override
   Widget build(BuildContext context) {
     final history = Provider.of<HistoryProvider>(context, listen: false);
     final category_image = history.getAllCategory
-        .firstWhere((e) => e["name"] == data["name"])["image"];
+        .firstWhere((e) => e["name"] == data["category"])["image"];
 
     return ListTile(
       leading: CircleAvatar(
@@ -23,11 +22,11 @@ class History extends StatelessWidget {
           width: 30,
         ),
       ),
-      title: Text(data['name']),
+      title: Text(data['category']),
       subtitle: Text(data['date']),
       trailing: Text(
         (data["income"] ? '+ ' : '- ') +
-            '${data["currency_symbol"]} ${data["value"]}',
+            '${data["currency"]} ${data["nominal"]}',
         style: data["income"]
             ? TextStyle(color: Colors.green)
             : TextStyle(color: Colors.red),

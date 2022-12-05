@@ -104,35 +104,37 @@ class HistoryProvider with ChangeNotifier {
 
   List<Map<String, dynamic>> get getAllCategory => _category;
 
-  List<Map<String, dynamic>> get getHistoryData {
-    // print(_history_data);
-    return _history_data;
+  List<Map<String, dynamic>> get getHistoryData => _history_data;
+
+  void downloadHistoryData() async {
+    List<Map<String, dynamic>> _data_download = [];
+    try {
+      await http
+          .get(
+        Uri.parse(
+          "https://bud-track-4652c-default-rtdb.firebaseio.com/money.json?auth=$_token",
+        ),
+      )
+          .then(
+        (value) {
+          final responseBody = jsonDecode(value.body) as Map<String, dynamic>;
+          responseBody.forEach((key, value) {
+            if (value['idUser'] == _userId) {
+              _data_download.add(value);
+            }
+          });
+          _history_data = _data_download;
+        },
+      );
+    } catch (error) {
+      throw error;
+    }
+    notifyListeners();
   }
 
   void updateData(token, uid) {
     _token = token;
     _userId = uid;
     notifyListeners();
-  }
-
-  void addHistory() {
-    http
-        .get(
-      Uri.parse(
-        "https://bud-track-4652c-default-rtdb.firebaseio.com/money.json?auth=$_token",
-      ),
-    )
-        .then(
-      (history) {
-        final responseBody = jsonDecode(history.body) as Map<String, dynamic>;
-        responseBody.forEach(
-          (key, value) {
-            if (value['idUser'] == _userId) {
-              _history_data.add(value);
-            }
-          },
-        );
-      },
-    );
   }
 }

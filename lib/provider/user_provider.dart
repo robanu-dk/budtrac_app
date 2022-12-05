@@ -169,7 +169,7 @@ class User with ChangeNotifier {
     }
   }
 
-  Future<void> login(String email, String password) async {
+  Future<String> login(String email, String password) async {
     Uri url = Uri.parse(
         'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAEA_PvRUC0fHLcH6S_XRUJos_B5RQ7mXI');
     try {
@@ -186,7 +186,7 @@ class User with ChangeNotifier {
       var responseBody = jsonDecode(response.body);
 
       if (responseBody['error'] != null) {
-        throw responseBody['error']['message'];
+        return responseBody['error']['message'];
       }
 
       setDataUser(responseBody['email'], responseBody['idToken']);
@@ -200,7 +200,8 @@ class User with ChangeNotifier {
       );
       tempData();
     } catch (error) {
-      throw error;
+      return error.toString();
     }
+    return '';
   }
 }

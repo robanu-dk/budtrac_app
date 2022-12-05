@@ -1,8 +1,11 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import '../pages/profile.dart';
 import '../pages/home.dart';
 import '../pages/history.dart';
+import '../provider/history_provider.dart';
 
 class BottomNavigation extends StatelessWidget {
   int currentIndex;
@@ -19,6 +22,10 @@ class BottomNavigation extends StatelessWidget {
                   context, MaterialPageRoute(builder: (context) => Homepage()));
               break;
             case 1:
+              Provider.of<HistoryProvider>(
+                context,
+                listen: false,
+              ).downloadHistoryData();
               Navigator.pushReplacement(context,
                   MaterialPageRoute(builder: (context) => HistoryPage()));
               break;
