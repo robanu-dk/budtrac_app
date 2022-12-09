@@ -21,7 +21,7 @@ class _SplashPageState extends State<SplashPage> {
     super.initState();
     Provider.of<User>(context, listen: false).token != null
         ? Timer(
-            Duration(seconds: 8),
+            Duration(seconds: 4),
             () => Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => Homepage()),

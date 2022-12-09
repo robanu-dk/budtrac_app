@@ -8,9 +8,11 @@ class User with ChangeNotifier {
       _lastName = '',
       _email = '',
       _phone_number = '',
+      _image = '',
+      _imageUrl = '',
       _firstName_sementara = '',
       _lastName_sementara = '',
-      _email_sementara = '',
+      // _email_sementara = '',
       _phone_number_sementara = '';
 
   var _idToken, _userId;
@@ -29,10 +31,10 @@ class User with ChangeNotifier {
     notifyListeners();
   }
 
-  void set_email_sementara(String email) {
-    _email_sementara = email;
-    notifyListeners();
-  }
+  // void set_email_sementara(String email) {
+  //   _email_sementara = email;
+  //   notifyListeners();
+  // }
 
   void set_phone_number_sementara(String phone_number) {
     _phone_number_sementara = phone_number;
@@ -43,7 +45,13 @@ class User with ChangeNotifier {
 
   String get lastName_sementara => _lastName_sementara;
 
-  String get email_sementara => _email_sementara;
+  String get getImage => _image;
+
+  String get getImageUrl => _imageUrl;
+
+  // String get email_sementara => _email_sementara;
+
+  String get userId => _userId;
 
   String get phone_number_sementara => _phone_number_sementara;
 
@@ -55,14 +63,38 @@ class User with ChangeNotifier {
 
   String get getPhoneNumber => _phone_number;
 
-  void updateData() {
+  void updateData() async {
+    var _key;
+
     _firstName =
         (firstName_sementara != '') ? firstName_sementara : getFirstName;
     _lastName = (lastName_sementara != '') ? lastName_sementara : getLastName;
-    _email = (email_sementara != '') ? email_sementara : getEmail;
+    // _email = (email_sementara != '') ? email_sementara : getEmail;
     _phone_number = (phone_number_sementara != '')
         ? phone_number_sementara
         : getPhoneNumber;
+
+    await http
+        .get(Uri.parse(
+            'https://bud-track-4652c-default-rtdb.firebaseio.com/user.json?auth=$token'))
+        .then((value) {
+      var bodyResponse = jsonDecode(value.body) as Map<String, dynamic>;
+      bodyResponse.forEach((key, value) {
+        if (value["userId"] == uid) {
+          _key = key;
+        }
+      });
+    });
+
+    http.patch(
+      Uri.parse(
+          'https://bud-track-4652c-default-rtdb.firebaseio.com/user/$_key.json?auth=$token'),
+      body: jsonEncode({
+        "firstName": _firstName,
+        "lastName": _lastName,
+        "phone_number": _phone_number,
+      }),
+    );
     notifyListeners();
   }
 
@@ -79,6 +111,9 @@ class User with ChangeNotifier {
           _email = email;
           _firstName = value['firstName'];
           _lastName = value["lastName"];
+          _image = value['image'];
+          _imageUrl = value['imageUrl'];
+          _phone_number = value['phone_number'];
         }
       });
     });
@@ -119,9 +154,12 @@ class User with ChangeNotifier {
           'https://bud-track-4652c-default-rtdb.firebaseio.com/user.json?auth=$token'),
       body: jsonEncode(
         {
+          "userId": _userId,
           "firstName": firstName,
           "lastName": lastName,
           "image": 'profile.png',
+          "imageUrl": '',
+          "phone_number": '',
           "email": email,
           "password": password,
           "createdAt": DateTime.now().toString(),
@@ -132,6 +170,40 @@ class User with ChangeNotifier {
     _firstName = firstName;
     _lastName = lastName;
     _email = email;
+    _image = 'profile.png';
+    _imageUrl = '';
+  }
+
+  void updateProfileImage(String image) async {
+    var keyUser;
+    String ref = image.split('+').first;
+    String imageUrl = image.split('+').last;
+    await http
+        .get(Uri.parse(
+            'https://bud-track-4652c-default-rtdb.firebaseio.com/user.json?auth=$token'))
+        .then(
+      (value) {
+        var bodyResponse = jsonDecode(value.body) as Map<String, dynamic>;
+        bodyResponse.forEach(
+          (key, value) {
+            if (value['userId'] == userId) {
+              keyUser = key;
+            }
+          },
+        );
+      },
+    );
+    await http.patch(
+      Uri.parse(
+          'https://bud-track-4652c-default-rtdb.firebaseio.com/user/$keyUser.json?auth=$token'),
+      body: jsonEncode({
+        "image": ref,
+        "imageUrl": imageUrl,
+      }),
+    );
+    _image = ref;
+    _imageUrl = imageUrl;
+    notifyListeners();
   }
 
   Future<void> regist(

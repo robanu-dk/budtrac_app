@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ProfileImage extends StatelessWidget {
-  String image;
+  Image image;
   ProfileImage({
     required this.image,
   });
@@ -10,7 +10,7 @@ class ProfileImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: BorderRadius.all(Radius.circular(10)),
-      child: Image.asset(this.image),
+      child: image,
     );
   }
 }

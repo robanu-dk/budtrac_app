@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
@@ -10,6 +8,8 @@ import '../provider/user_provider.dart';
 import '../widget/profileImage.dart';
 import '../widget/iconEditProfileImage.dart';
 import '../widget/tombolAction.dart';
+import '../widget/previewUploadImage.dart';
+import '../controller/firebase_storage_controller.dart';
 
 class ProfilePage extends StatefulWidget {
   ProfilePage({super.key});
@@ -20,33 +20,95 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   bool _edit = false;
+  FirebaseStorageController controller = FirebaseStorageController();
 
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context, listen: false);
 
-    Map<String, dynamic> profile = {
-      'firstname': user.getFirstName,
-      'lastname': user.getLastName,
-      'email': user.getEmail,
-      'phone_number': user.getPhoneNumber,
-      'image_profile': 'images/profile.png'
-    };
+    // Map<String, dynamic> profile = {
+    //   'firstname': user.getFirstName,
+    //   'lastname': user.getLastName,
+    //   'email': user.getEmail,
+    //   'phone_number': user.getPhoneNumber,
+    //   'image_profile': user.getImage
+    // };
 
-    selectFromCamera() async {
-      XFile? cameraFile = await ImagePicker().pickImage(
-        source: ImageSource.camera,
-        // maxHeight: 50.0,
-        // maxWidth: 50.0,
-      );
-      print(cameraFile!.path.toString());
+    selectFile(String source) {
+      (source == 'Camera')
+          ? controller.selectImageFromCamera().then(
+                (file) => file != null
+                    ? showDialog(
+                        context: context,
+                        builder: (context) => PreviewUploadImage(
+                          file: file,
+                          imageFor: "profile",
+                          userId: user.userId,
+                        ),
+                      )
+                    : null,
+              )
+          : (source == 'Gallery')
+              ? controller.selectImageFromGallery().then(
+                    (file) => file != null
+                        ? showDialog(
+                            context: context,
+                            builder: (context) => PreviewUploadImage(
+                              file: file,
+                              imageFor: "profile",
+                              userId: user.userId,
+                            ),
+                          )
+                        : null,
+                  )
+              : showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: Text("Alert"),
+                    content: Text("Delete profile photo?"),
+                    actions: [
+                      TextButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: Text("No")),
+                      TextButton(
+                        onPressed: () {
+                          print(user.getImage);
+                          controller.deleteImage(user.getImage).then((value) =>
+                              user.updateProfileImage("profile.png+ "));
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                              builder: (context) => ProfilePage(),
+                            ),
+                          );
+                        },
+                        child: Text("Yes"),
+                      )
+                    ],
+                  ),
+                );
     }
 
-    selectFromGallery() async {
-      XFile? galleryFile = await ImagePicker().pickImage(
-        source: ImageSource.gallery,
-        // maxHeight: 50.0,
-        // maxWidth: 50.0,
+    IconButton inputanFile(String source) {
+      return IconButton(
+        splashRadius: 50,
+        iconSize: 85,
+        icon: Column(
+          children: [
+            Icon(
+              (source == 'Camera')
+                  ? Icons.camera_alt_rounded
+                  : (source == "Gallery")
+                      ? Icons.perm_media_sharp
+                      : Icons.delete,
+              size: 60,
+            ),
+            Text(source),
+          ],
+        ),
+        // onPressed: selectFromCamera,
+        onPressed: () {
+          selectFile(source);
+        },
       );
     }
 
@@ -54,7 +116,10 @@ class _ProfilePageState extends State<ProfilePage> {
         appBar: AppBar(
           automaticallyImplyLeading: false,
           backgroundColor: Colors.pink[800],
-          title: Text("Profile", style: TextStyle(fontSize: 24)),
+          title: Text(
+            "Profile",
+            style: TextStyle(fontSize: 24),
+          ),
         ),
         body: SingleChildScrollView(
           scrollDirection: Axis.vertical,
@@ -110,35 +175,12 @@ class _ProfilePageState extends State<ProfilePage> {
                                             scrollDirection: Axis.vertical,
                                             child: Row(
                                               children: [
-                                                IconButton(
-                                                  splashRadius: 50,
-                                                  iconSize: 85,
-                                                  icon: Column(
-                                                    children: [
-                                                      Icon(
-                                                        Icons
-                                                            .camera_alt_rounded,
-                                                        size: 60,
-                                                      ),
-                                                      Text("Camera"),
-                                                    ],
-                                                  ),
-                                                  onPressed: selectFromCamera,
-                                                ),
-                                                IconButton(
-                                                  splashRadius: 50,
-                                                  iconSize: 85,
-                                                  icon: Column(
-                                                    children: [
-                                                      Icon(
-                                                        Icons.perm_media_sharp,
-                                                        size: 60,
-                                                      ),
-                                                      Text("Gallery"),
-                                                    ],
-                                                  ),
-                                                  onPressed: selectFromGallery,
-                                                )
+                                                inputanFile('Camera'),
+                                                inputanFile('Gallery'),
+                                                (value.getImage !=
+                                                        "profile.png")
+                                                    ? inputanFile('Delete')
+                                                    : Text(''),
                                               ],
                                             ),
                                           ),
@@ -149,47 +191,63 @@ class _ProfilePageState extends State<ProfilePage> {
                             },
                             icon: _edit
                                 ? Stack(
+                                    alignment: AlignmentDirectional.center,
                                     children: [
                                       ProfileImage(
-                                        image:
-                                            profile['image_profile'].toString(),
+                                        image: (value.getImage == 'profile.png')
+                                            ? Image.asset(
+                                                'images/${value.getImage}',
+                                              )
+                                            : Image.network(value.getImageUrl),
                                       ),
                                       IconEditProfileImage(),
                                     ],
                                   )
                                 : ProfileImage(
-                                    image: profile['image_profile'].toString()),
+                                    image: (value.getImage == 'profile.png')
+                                        ? Image.asset(
+                                            'images/${value.getImage}',
+                                          )
+                                        : Image.network(
+                                            value.getImageUrl,
+                                          ),
+                                  ),
                           ),
                         ),
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 40, left: 10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            width: MediaQuery.of(context).size.width * 0.58,
-                            child: Text(
-                              '${profile['firstname'] + ' ' + profile['lastname']}',
-                              maxLines: 2,
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 15),
-                            child: Container(
+                      child: Consumer<User>(
+                        builder: (context, value, child) => Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
                               width: MediaQuery.of(context).size.width * 0.58,
                               child: Text(
-                                '${profile['email']}',
+                                // '${profile['firstname'] + ' ' + profile['lastname']}',
+                                '${value.getFirstName + ' ' + value.getLastName}',
                                 maxLines: 2,
                                 style: TextStyle(
-                                    fontSize: 16, color: Colors.grey.shade600),
+                                    fontSize: 20, fontWeight: FontWeight.bold),
                               ),
                             ),
-                          )
-                        ],
+                            Padding(
+                              padding: const EdgeInsets.only(top: 15),
+                              child: Container(
+                                width: MediaQuery.of(context).size.width * 0.58,
+                                child: Text(
+                                  // '${profile['email']}',
+                                  '${value.getEmail}',
+                                  maxLines: 2,
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.grey.shade600),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     )
                   ],
@@ -294,7 +352,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                 controller: _edit
                                     ? null
                                     : TextEditingController(
-                                        text: '${profile['firstname']}'),
+                                        text:
+                                            // '${profile['firstname']}',
+                                            user.getFirstName,
+                                      ),
                                 enabled: _edit,
                                 autocorrect: false,
                                 decoration: InputDecoration(
@@ -325,7 +386,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                 controller: _edit
                                     ? null
                                     : TextEditingController(
-                                        text: '${profile['lastname']}'),
+                                        text:
+                                            // '${profile['lastname']}',
+                                            user.getLastName,
+                                      ),
                                 enabled: _edit,
                                 autocorrect: false,
                                 decoration: InputDecoration(
@@ -355,14 +419,17 @@ class _ProfilePageState extends State<ProfilePage> {
                           child: Consumer<User>(
                             builder: (context, value, child) => TextField(
                               keyboardType: TextInputType.emailAddress,
-                              onChanged: (value) {
-                                user.set_email_sementara(value);
-                              },
-                              enabled: _edit,
+                              // onChanged: (value) {
+                              //   user.set_email_sementara(value);
+                              // },
+                              enabled: false,
                               controller: _edit
                                   ? null
                                   : TextEditingController(
-                                      text: '${profile['email']}'),
+                                      text:
+                                          // '${profile['email']}',
+                                          '${user.getEmail}',
+                                    ),
                               decoration: InputDecoration(
                                 focusedBorder: OutlineInputBorder(
                                     borderSide:
@@ -394,7 +461,10 @@ class _ProfilePageState extends State<ProfilePage> {
                               controller: _edit
                                   ? null
                                   : TextEditingController(
-                                      text: '${profile['phone_number']}'),
+                                      text:
+                                          // '${profile['phone_number']}',
+                                          '${value.getPhoneNumber}',
+                                    ),
                               decoration: InputDecoration(
                                 focusedBorder: OutlineInputBorder(
                                     borderSide:

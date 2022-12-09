@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "529036986068",
+    "firebase_url": "https://bud-track-4652c-default-rtdb.firebaseio.com",
+    "project_id": "bud-track-4652c",
+    "storage_bucket": "bud-track-4652c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:529036986068:android:0bc6b6fac228e94b319d41",
+        "android_client_info": {
+          "package_name": "com.example.moneytracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "529036986068-e1jjbqud1qrlppc3d68bvn073qvltl0n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8mabpzlHePeIiAUamFQb4PHH3c8wYQU8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "529036986068-e1jjbqud1qrlppc3d68bvn073qvltl0n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
