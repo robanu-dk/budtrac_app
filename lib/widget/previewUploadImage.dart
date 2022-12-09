@@ -41,15 +41,15 @@ class PreviewUploadImage extends StatelessWidget {
         Consumer<User>(
           builder: (context, value, child) => TextButton(
             onPressed: () {
-              if (value.getImage == "profile.png") {
-                controller.uploadImage(imageFor, userId, file).then(
-                      (value) => user.updateProfileImage(value),
-                    );
-              } else {
-                controller.updateImage(imageFor, value.getImage, file).then(
-                      (value) => user.updateProfileImage(value),
-                    );
-              }
+              controller
+                  .updateProfilePhoto(
+                      imageFor: imageFor,
+                      userId: userId,
+                      ref: user.getImage,
+                      file: file)
+                  .then(
+                    (value) => user.updateProfileImage(value),
+                  );
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
                   builder: (context) => ProfilePage(),

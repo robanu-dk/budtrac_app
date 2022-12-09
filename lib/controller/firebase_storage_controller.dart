@@ -53,18 +53,31 @@ class FirebaseStorageController extends GetxController {
     await _storage.ref(ref).delete();
   }
 
-// Update image
-  Future<String> updateImage(String imageFor, String ref, File file) async {
+// Update Profile Photo
+  Future<String> updateProfilePhoto({
+    required String imageFor,
+    required String userId,
+    required String ref,
+    required File file,
+  }) async {
     try {
       var _url;
 
-      await deleteImage(ref);
+      String extention = file.path.split(".").last;
+      String fileName = '$userId.$extention';
 
-      await _storage.ref(ref).putFile(file);
+      if (ref != "profile.png") {
+        await deleteImage(ref);
+      }
 
-      await _storage.ref(ref).getDownloadURL().then((url) => _url = url);
+      await _storage.ref('$imageFor/$fileName').putFile(file);
 
-      return '$ref+$_url';
+      await _storage
+          .ref('$imageFor/$fileName')
+          .getDownloadURL()
+          .then((url) => _url = url);
+
+      return '$imageFor/$fileName+$_url';
     } catch (error) {
       throw error;
     }
