@@ -32,17 +32,21 @@ class FirebaseStorageController extends GetxController {
       var url;
 
       String extention = file.path.split('.').last;
-      String namaFile = '$userId.$extention';
 
-      var storageAction = _storage.ref('$imageFor/$namaFile');
+      var index = await _storage
+          .ref('$userId/$imageFor')
+          .listAll()
+          .then((value) => value.items.length);
+
+      String namaFile = '${userId}_$imageFor$index.$extention';
+      String ref = '$userId/$imageFor/$namaFile';
+
+      var storageAction = _storage.ref(ref);
       await storageAction.putFile(file);
 
-      await _storage
-          .ref('$imageFor/$namaFile')
-          .getDownloadURL()
-          .then((value) => url = value);
+      await storageAction.getDownloadURL().then((value) => url = value);
 
-      return '$imageFor/$namaFile+$url';
+      return '$ref+$url';
     } catch (error) {
       throw error;
     }
@@ -65,19 +69,17 @@ class FirebaseStorageController extends GetxController {
 
       String extention = file.path.split(".").last;
       String fileName = '$userId.$extention';
+      String newRef = '$userId/$imageFor/$fileName';
 
       if (ref != "profile.png") {
         await deleteImage(ref);
       }
 
-      await _storage.ref('$imageFor/$fileName').putFile(file);
+      await _storage.ref(newRef).putFile(file);
 
-      await _storage
-          .ref('$imageFor/$fileName')
-          .getDownloadURL()
-          .then((url) => _url = url);
+      await _storage.ref(newRef).getDownloadURL().then((url) => _url = url);
 
-      return '$imageFor/$fileName+$_url';
+      return '$newRef+$_url';
     } catch (error) {
       throw error;
     }

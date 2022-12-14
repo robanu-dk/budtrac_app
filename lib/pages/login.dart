@@ -127,12 +127,13 @@ class _MyWidgetState extends State<LoginPage> {
                                 ? showDialog(
                                     context: context,
                                     builder: (context) => AlertDialog(
-                                      title: Text('Error (belum disetting)'),
+                                      title: Text('Login Failed'),
                                       actions: [
                                         TextButton(
-                                            onPressed: () =>
-                                                Navigator.of(context).pop(),
-                                            child: Text('OK'))
+                                          onPressed: () =>
+                                              Navigator.of(context).pop(),
+                                          child: Text('Try Again'),
+                                        )
                                       ],
                                     ),
                                   )

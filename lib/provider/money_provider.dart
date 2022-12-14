@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
@@ -7,8 +8,9 @@ class Money with ChangeNotifier {
   String _currencyCode = "IDR",
       _currencySymbol = "Rp",
       _countryFlagCode = "id",
-      _nominal = '';
-  String _note = '', _media = '';
+      _nominal = '',
+      _media = '',
+      _media_url = '';
 
   var _token, _userId;
 
@@ -42,26 +44,25 @@ class Money with ChangeNotifier {
 
   String get getCountryFlagCode => _countryFlagCode;
 
-  void setNote(String note) {
-    _note = note;
-    notifyListeners();
+  void setMediaAndUrl(File media) {
+    print("========================");
+    print(media.path);
+    // _media = media.path.split('.').last;
+    // notifyListeners();
   }
-
-  void setMedia(String media) {
-    _media = media;
-    notifyListeners();
-  }
-
-  String get getNote => _note;
 
   String get getMedia => _media;
+
+  String get getMediaUrl => _media_url;
 
   Future<http.Response> postData({
     required String nominal,
     required String wallet,
     required String category,
     required String date,
-    String media = '',
+    required String note,
+    required String mediaName,
+    required String mediaUrl,
     required bool income,
   }) async {
     Uri url = Uri.parse(
@@ -77,8 +78,9 @@ class Money with ChangeNotifier {
         'wallet': wallet,
         'category': category,
         'date': date,
-        'note': getNote,
-        'media': media,
+        'note': note,
+        'media': mediaName,
+        'mediaUrl': mediaUrl,
         'income': income
       }),
     );

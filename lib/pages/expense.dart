@@ -426,13 +426,14 @@ class _InputExpensePageState extends State<InputExpensePage> {
                           ? AlertCantSave(
                               incomeExpense: true,
                             )
-                          : SaveData(
-                              nominal: nominal,
-                              purchase: purchase,
-                              chosen_category: chosen_category,
-                              date: date,
-                              income: false,
-                            ),
+                          : Text('tanda'),
+                  // SaveData(
+                  //     nominal: nominal,
+                  //     purchase: purchase,
+                  //     chosen_category: chosen_category,
+                  //     date: date,
+                  //     income: false,
+                  //   ),
                 );
               },
               icon: Row(

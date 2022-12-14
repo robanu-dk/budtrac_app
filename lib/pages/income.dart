@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -8,13 +10,13 @@ import 'package:currency_picker/currency_picker.dart';
 import 'package:list_picker/list_picker.dart';
 import 'package:provider/provider.dart';
 
-import './home.dart';
 import '../provider/category_provider.dart';
 import '../provider/money_provider.dart';
 import '../widget/categoryCard.dart';
 import '../widget/walletCard.dart';
 import '../widget/saveDataAlertIncomeExpense.dart';
 import '../widget/alertCannotSave.dart';
+import '../controller/firebase_storage_controller.dart';
 
 class InputIncomePage extends StatefulWidget {
   InputIncomePage({Key? key}) : super(key: key);
@@ -29,33 +31,45 @@ class _InputIncomePageState extends State<InputIncomePage> {
     label: "Source of Income",
     items: const ["Salary", "Debt", "Transfer"],
   );
+
   String purchase = "Transfer";
+
   DateTime date = DateTime.now();
-  String nominal = '';
+
+  String nominal = '', note = '';
+
+  FirebaseStorageController controller = FirebaseStorageController();
+
+  late File file;
+  bool uploadFile = false;
 
   @override
   Widget build(BuildContext context) {
     final category = Provider.of<Category>(context, listen: false);
     final income = Provider.of<Money>(context, listen: false);
 
-    selectFromCamera() async {
-      final cameraFile = await ImagePicker().pickImage(
-        source: ImageSource.camera,
-        // maxHeight: 50.0,
-        // maxWidth: 50.0,
-      );
-      final a = cameraFile?.saveTo('../images');
-      print(a);
-      setState(() {});
-    }
+    void selectFile(String source) async {
+      if (source == "Camera") {
+        await controller.selectImageFromCamera().then((value) {
+          setState(() {
+            file = value;
+          });
+        });
+      } else {
+        await controller.selectImageFromGallery().then((value) {
+          setState(() {
+            file = value;
+          });
+        });
+      }
 
-    selectFromGallery() async {
-      XFile? galleryFile = await ImagePicker().pickImage(
-        source: ImageSource.gallery,
-        // maxHeight: 50.0,
-        // maxWidth: 50.0,
-      );
-      setState(() {});
+      // Change uploadFile status
+      setState(() {
+        uploadFile = true;
+      });
+
+      // Pop context
+      Navigator.of(context).pop();
     }
 
     return Scaffold(
@@ -153,7 +167,7 @@ class _InputIncomePageState extends State<InputIncomePage> {
                           style: TextStyle(fontWeight: FontWeight.bold),
                           textAlign: TextAlign.end,
                           keyboardType: TextInputType.number,
-                          onSubmitted: (value) {
+                          onChanged: (value) {
                             setState(() {
                               nominal = value;
                             });
@@ -377,8 +391,10 @@ class _InputIncomePageState extends State<InputIncomePage> {
                     ),
                     maxLines: 5,
                     minLines: 1,
-                    onSubmitted: (value) {
-                      income.setNote(value);
+                    onChanged: (value) {
+                      setState(() {
+                        note = value;
+                      });
                     },
                   ),
                 ),
@@ -426,7 +442,9 @@ class _InputIncomePageState extends State<InputIncomePage> {
                                 Text("Camera"),
                               ],
                             ),
-                            onPressed: selectFromCamera,
+                            onPressed: () {
+                              selectFile("Camera");
+                            },
                           ),
                           IconButton(
                             splashRadius: 50,
@@ -440,7 +458,9 @@ class _InputIncomePageState extends State<InputIncomePage> {
                                 Text("Gallery"),
                               ],
                             ),
-                            onPressed: selectFromGallery,
+                            onPressed: () {
+                              selectFile("Gallery");
+                            },
                           )
                         ],
                       ),
@@ -460,52 +480,141 @@ class _InputIncomePageState extends State<InputIncomePage> {
             ),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.only(top: 30.0, left: 50, right: 50),
-          child: Card(
-            color: Colors.pink[800],
-            shadowColor: Colors.white,
-            shape: RoundedRectangleBorder(
-              side: BorderSide(color: Colors.grey.shade300),
-              borderRadius: BorderRadius.all(Radius.circular(50)),
-            ),
-            child: IconButton(
-              splashRadius: 160,
-              iconSize: 28,
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (context) =>
-                      (nominal == '' || chosen_category.length == 0)
-                          ? AlertCantSave(
-                              incomeExpense: true,
-                            )
-                          : SaveData(
+        (uploadFile)
+            ? Padding(
+                padding: const EdgeInsets.only(top: 10.0, left: 8, right: 8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Preview:",
+                      style: TextStyle(color: Colors.blue),
+                    ),
+                    Center(
+                      child: Image.file(
+                        file,
+                      ),
+                    ),
+                    Container(
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
+                        onPressed: () {
+                          setState(() {
+                            uploadFile = false;
+                          });
+                        },
+                        child: Text(
+                          "Delete",
+                          style: TextStyle(color: Colors.red),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          top: 10.0, left: 50, right: 50, bottom: 20),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * 1,
+                        child: Card(
+                          color: Colors.pink[800],
+                          shadowColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            side: BorderSide(color: Colors.grey.shade300),
+                            borderRadius: BorderRadius.all(Radius.circular(50)),
+                          ),
+                          child: Consumer<Money>(
+                            builder: (context, value, child) => SaveButton(
                               nominal: nominal,
-                              purchase: purchase,
                               chosen_category: chosen_category,
+                              purchase: purchase,
+                              note: note,
+                              file: file,
                               date: date,
-                              income: true,
                             ),
-                );
-              },
-              icon: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.save,
-                    color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              )
+            : Padding(
+                padding: const EdgeInsets.only(top: 30.0, left: 50, right: 50),
+                child: Card(
+                  color: Colors.pink[800],
+                  shadowColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide(color: Colors.grey.shade300),
+                    borderRadius: BorderRadius.all(Radius.circular(50)),
                   ),
-                  Text(
-                    "Save",
-                    style: TextStyle(color: Colors.white),
+                  child: Consumer<Money>(
+                    builder: (context, value, child) => SaveButton(
+                      nominal: nominal,
+                      chosen_category: chosen_category,
+                      purchase: purchase,
+                      note: note,
+                      date: date,
+                    ),
                   ),
-                ],
-              ),
-            ),
-          ),
-        )
+                ),
+              )
       ]),
+    );
+  }
+}
+
+class SaveButton extends StatelessWidget {
+  SaveButton({
+    Key? key,
+    required this.nominal,
+    required this.chosen_category,
+    required this.purchase,
+    required this.date,
+    this.file = "",
+    required this.note,
+  }) : super(key: key);
+
+  final String nominal, note;
+  final Map<String, dynamic> chosen_category;
+  final String purchase;
+  final DateTime date;
+  final file;
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      splashRadius: 160,
+      iconSize: 28,
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (context) => (nominal == '' || chosen_category.length == 0)
+              ? AlertCantSave(
+                  incomeExpense: true,
+                )
+              : SaveData(
+                  nominal: nominal,
+                  purchase: purchase,
+                  chosen_category: chosen_category,
+                  date: date,
+                  note: note,
+                  file: file,
+                  incomeStat: true,
+                ),
+        );
+      },
+      icon: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.save,
+            color: Colors.white,
+          ),
+          Text(
+            "Save",
+            style: TextStyle(color: Colors.white),
+          ),
+        ],
+      ),
     );
   }
 }
