@@ -521,15 +521,13 @@ class _InputIncomePageState extends State<InputIncomePage> {
                             side: BorderSide(color: Colors.grey.shade300),
                             borderRadius: BorderRadius.all(Radius.circular(50)),
                           ),
-                          child: Consumer<Money>(
-                            builder: (context, value, child) => SaveButton(
-                              nominal: nominal,
-                              chosen_category: chosen_category,
-                              purchase: purchase,
-                              note: note,
-                              file: file,
-                              date: date,
-                            ),
+                          child: SaveButton(
+                            nominal: nominal,
+                            chosen_category: chosen_category,
+                            purchase: purchase,
+                            note: note,
+                            file: file,
+                            date: date,
                           ),
                         ),
                       ),
@@ -546,14 +544,12 @@ class _InputIncomePageState extends State<InputIncomePage> {
                     side: BorderSide(color: Colors.grey.shade300),
                     borderRadius: BorderRadius.all(Radius.circular(50)),
                   ),
-                  child: Consumer<Money>(
-                    builder: (context, value, child) => SaveButton(
-                      nominal: nominal,
-                      chosen_category: chosen_category,
-                      purchase: purchase,
-                      note: note,
-                      date: date,
-                    ),
+                  child: SaveButton(
+                    nominal: nominal,
+                    chosen_category: chosen_category,
+                    purchase: purchase,
+                    note: note,
+                    date: date,
                   ),
                 ),
               )

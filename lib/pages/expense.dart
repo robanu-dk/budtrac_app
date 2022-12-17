@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:currency_picker/currency_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
@@ -15,6 +17,7 @@ import '../widget/saveDataAlertIncomeExpense.dart';
 import '../widget/alertCannotSave.dart';
 import '../provider/money_provider.dart';
 import '../provider/category_provider.dart';
+import '../controller/firebase_storage_controller.dart';
 
 class InputExpensePage extends StatefulWidget {
   InputExpensePage({Key? key}) : super(key: key);
@@ -24,6 +27,8 @@ class InputExpensePage extends StatefulWidget {
 }
 
 class _InputExpensePageState extends State<InputExpensePage> {
+  FirebaseStorageController controller = FirebaseStorageController();
+
   Map<String, dynamic> chosen_category = {};
 
   final listPickerField = ListPickerField(
@@ -33,28 +38,59 @@ class _InputExpensePageState extends State<InputExpensePage> {
   String purchase = "Transfer";
   DateTime date = DateTime.now();
   String nominal = '';
+  String note = "";
+
+  late File file;
+  bool uploadStat = false;
 
   @override
   Widget build(BuildContext context) {
     final money = Provider.of<Money>(context, listen: false);
     final category = Provider.of<Category>(context, listen: false);
 
-    selectFromCamera() async {
-      XFile? cameraFile = await ImagePicker().pickImage(
-        source: ImageSource.camera,
-        // maxHeight: 50.0,
-        // maxWidth: 50.0,
-      );
-      setState(() {});
+    selectImage(String source) async {
+      if (source == "Camera") {
+        await controller.selectImageFromCamera().then((value) {
+          setState(() {
+            file = value;
+          });
+        });
+      } else {
+        await controller.selectImageFromGallery().then((value) {
+          setState(() {
+            file = value;
+          });
+        });
+      }
+
+      // Change upload status
+      setState(() {
+        uploadStat = true;
+      });
+
+      // navigator pop
+      Navigator.of(context).pop();
     }
 
-    selectFromGallery() async {
-      XFile? galleryFile = await ImagePicker().pickImage(
-        source: ImageSource.gallery,
-        // maxHeight: 50.0,
-        // maxWidth: 50.0,
+    IconButton SelectImageButton(String source) {
+      return IconButton(
+        splashRadius: 50,
+        iconSize: 85,
+        icon: Column(
+          children: [
+            Icon(
+              source == "Camera"
+                  ? Icons.camera_alt_rounded
+                  : Icons.perm_media_sharp,
+              size: 60,
+            ),
+            Text(source),
+          ],
+        ),
+        onPressed: () {
+          selectImage(source);
+        },
       );
-      setState(() {});
     }
 
     return Scaffold(
@@ -106,7 +142,7 @@ class _InputExpensePageState extends State<InputExpensePage> {
                           style: TextStyle(fontWeight: FontWeight.bold),
                           textAlign: TextAlign.end,
                           keyboardType: TextInputType.number,
-                          onSubmitted: (value) {
+                          onChanged: (value) {
                             setState(() {
                               nominal = value;
                             });
@@ -325,6 +361,11 @@ class _InputExpensePageState extends State<InputExpensePage> {
                       border: InputBorder.none,
                       label: Text(" Note"),
                     ),
+                    onChanged: (value) {
+                      setState(() {
+                        note = value;
+                      });
+                    },
                     maxLines: 5,
                     minLines: 1,
                   ),
@@ -361,34 +402,8 @@ class _InputExpensePageState extends State<InputExpensePage> {
                       scrollDirection: Axis.vertical,
                       child: Row(
                         children: [
-                          IconButton(
-                            splashRadius: 50,
-                            iconSize: 85,
-                            icon: Column(
-                              children: [
-                                Icon(
-                                  Icons.camera_alt_rounded,
-                                  size: 60,
-                                ),
-                                Text("Camera"),
-                              ],
-                            ),
-                            onPressed: selectFromCamera,
-                          ),
-                          IconButton(
-                            splashRadius: 50,
-                            iconSize: 85,
-                            icon: Column(
-                              children: [
-                                Icon(
-                                  Icons.perm_media_sharp,
-                                  size: 60,
-                                ),
-                                Text("Gallery"),
-                              ],
-                            ),
-                            onPressed: selectFromGallery,
-                          )
+                          SelectImageButton("Camera"),
+                          SelectImageButton("Gallery"),
                         ],
                       ),
                     ),
@@ -407,52 +422,126 @@ class _InputExpensePageState extends State<InputExpensePage> {
             ),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.only(top: 30.0, left: 50, right: 50),
-          child: Card(
-            color: Colors.pink[800],
-            shadowColor: Colors.white,
-            shape: RoundedRectangleBorder(
-                side: BorderSide(color: Colors.grey.shade300),
-                borderRadius: BorderRadius.all(Radius.circular(50))),
-            child: IconButton(
-              splashRadius: 160,
-              iconSize: 28,
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (context) =>
-                      (nominal == '' || chosen_category.length == 0)
-                          ? AlertCantSave(
-                              incomeExpense: true,
-                            )
-                          : Text('tanda'),
-                  // SaveData(
-                  //     nominal: nominal,
-                  //     purchase: purchase,
-                  //     chosen_category: chosen_category,
-                  //     date: date,
-                  //     income: false,
-                  //   ),
-                );
-              },
-              icon: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.save,
-                    color: Colors.white,
-                  ),
-                  Text(
-                    "Save",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        )
+        uploadStat
+            ? Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Preview",
+                      style: TextStyle(color: Colors.blue),
+                    ),
+                    Center(
+                      child: Image.file(file),
+                    ),
+                    Container(
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
+                        onPressed: () {
+                          setState(() {
+                            uploadStat = false;
+                          });
+                        },
+                        child: Text(
+                          "Delete",
+                          style: TextStyle(
+                            color: Colors.red,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(
+                          top: 10.0, left: 50, right: 50, bottom: 20),
+                      width: MediaQuery.of(context).size.width * 1,
+                      child: SaveButton(
+                          nominal: nominal,
+                          purchase: purchase,
+                          chosen_category: chosen_category,
+                          date: date,
+                          note: note,
+                          file: file,
+                          incomeStat: false),
+                    )
+                  ],
+                ),
+              )
+            : Padding(
+                padding: const EdgeInsets.only(top: 30.0, left: 50, right: 50),
+                child: SaveButton(
+                    nominal: nominal,
+                    purchase: purchase,
+                    chosen_category: chosen_category,
+                    date: date,
+                    note: note,
+                    incomeStat: false),
+              )
       ]),
+    );
+  }
+}
+
+class SaveButton extends StatelessWidget {
+  const SaveButton({
+    required this.nominal,
+    required this.purchase,
+    required this.chosen_category,
+    required this.date,
+    required this.note,
+    this.file = "",
+    required this.incomeStat,
+  });
+
+  final String nominal, purchase, note;
+  final Map<String, dynamic> chosen_category;
+  final DateTime date;
+  final bool incomeStat;
+  final file;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      color: Colors.pink[800],
+      shadowColor: Colors.white,
+      shape: RoundedRectangleBorder(
+          side: BorderSide(color: Colors.grey.shade300),
+          borderRadius: BorderRadius.all(Radius.circular(50))),
+      child: IconButton(
+        splashRadius: 160,
+        iconSize: 28,
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) => (nominal == '' || chosen_category.length == 0)
+                ? AlertCantSave(
+                    incomeExpense: true,
+                  )
+                : SaveData(
+                    nominal: nominal,
+                    purchase: purchase,
+                    chosen_category: chosen_category,
+                    date: date,
+                    note: note,
+                    file: file,
+                    incomeStat: incomeStat,
+                  ),
+          );
+        },
+        icon: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.save,
+              color: Colors.white,
+            ),
+            Text(
+              "Save",
+              style: TextStyle(color: Colors.white),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
