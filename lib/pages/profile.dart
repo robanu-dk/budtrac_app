@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 
+import './splash.dart';
 import '../navigation/bottom_navigation.dart';
-import '../pages/login.dart';
 import '../provider/user_provider.dart';
 import '../widget/profileImage.dart';
 import '../widget/iconEditProfileImage.dart';
@@ -88,27 +88,32 @@ class _ProfilePageState extends State<ProfilePage> {
                 );
     }
 
-    IconButton inputanFile(String source) {
-      return IconButton(
-        splashRadius: 50,
-        iconSize: 85,
-        icon: Column(
-          children: [
-            Icon(
-              (source == 'Camera')
-                  ? Icons.camera_alt_rounded
-                  : (source == "Gallery")
-                      ? Icons.perm_media_sharp
-                      : Icons.delete,
-              size: 60,
-            ),
-            Text(source),
-          ],
+    Card inputanFile(String source) {
+      return Card(
+        margin: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+        color: Colors.grey[300],
+        elevation: 6,
+        child: IconButton(
+          splashRadius: 50,
+          iconSize: 70,
+          icon: Column(
+            children: [
+              Icon(
+                (source == 'Camera')
+                    ? Icons.camera_alt_rounded
+                    : (source == "Gallery")
+                        ? Icons.perm_media_sharp
+                        : Icons.delete,
+                size: 50,
+              ),
+              Text(source),
+            ],
+          ),
+          // onPressed: selectFromCamera,
+          onPressed: () {
+            selectFile(source);
+          },
         ),
-        // onPressed: selectFromCamera,
-        onPressed: () {
-          selectFile(source);
-        },
       );
     }
 
@@ -162,11 +167,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                               ? MediaQuery.of(context)
                                                       .size
                                                       .height *
-                                                  0.22
+                                                  0.30
                                               : MediaQuery.of(context)
                                                       .size
                                                       .height *
-                                                  0.15,
+                                                  0.18,
                                           width: MediaQuery.of(context)
                                                   .size
                                                   .width *
@@ -493,8 +498,36 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: Container(
                     width: MediaQuery.of(context).size.width * 0.5,
                     child: IconButton(
-                      onPressed: () => Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (context) => LoginPage())),
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: Text("Logout?"),
+                            actions: [
+                              TextButton(
+                                onPressed: () {},
+                                child: Text("Cancel"),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  user.logout().then(
+                                        (value) => Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => SplashPage(),
+                                          ),
+                                        ),
+                                      );
+                                },
+                                child: Text(
+                                  "Yes",
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                              )
+                            ],
+                          ),
+                        );
+                      },
                       icon: Text(
                         'Log out',
                         style: TextStyle(color: Colors.white, fontSize: 20),

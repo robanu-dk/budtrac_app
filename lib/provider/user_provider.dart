@@ -276,4 +276,10 @@ class User with ChangeNotifier {
     }
     return '';
   }
+
+  Future<void> logout() async {
+    _tempUserId = null;
+    _tempIdToken = null;
+    tempData();
+  }
 }
