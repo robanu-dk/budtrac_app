@@ -25,7 +25,6 @@ class CardWelcome extends StatelessWidget {
                   Color.fromARGB(120, 165, 100, 129),
                   Color.fromARGB(0, 160, 149, 154),
                 ])),
-        height: 120,
         child: Padding(
           padding: const EdgeInsets.only(left: 15, right: 15),
           child:
@@ -34,8 +33,9 @@ class CardWelcome extends StatelessWidget {
               padding: const EdgeInsets.only(top: 10),
               child: Text(
                 "Welcome, " + this.name,
-                maxLines: 1,
+                maxLines: 2,
                 style: TextStyle(
+                    overflow: TextOverflow.ellipsis,
                     color: Colors.white,
                     fontFamily: 'DoppioOne',
                     fontWeight: FontWeight.w400,
@@ -49,7 +49,7 @@ class CardWelcome extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 8.0),
+              padding: const EdgeInsets.only(top: 8.0, bottom: 12.0),
               child: Text(
                 "Have a nice day !",
                 style: TextStyle(

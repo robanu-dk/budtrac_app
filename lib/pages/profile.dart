@@ -203,7 +203,16 @@ class _ProfilePageState extends State<ProfilePage> {
                                             ? Image.asset(
                                                 'images/${value.getImage}',
                                               )
-                                            : Image.network(value.getImageUrl),
+                                            : Image.network(
+                                                value.getImageUrl,
+                                                fit: BoxFit.cover,
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                                height: MediaQuery.of(context)
+                                                    .size
+                                                    .height,
+                                              ),
                                       ),
                                       IconEditProfileImage(),
                                     ],
@@ -215,6 +224,13 @@ class _ProfilePageState extends State<ProfilePage> {
                                           )
                                         : Image.network(
                                             value.getImageUrl,
+                                            fit: BoxFit.cover,
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            height: MediaQuery.of(context)
+                                                .size
+                                                .height,
                                           ),
                                   ),
                           ),

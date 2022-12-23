@@ -44,13 +44,6 @@ class Money with ChangeNotifier {
 
   String get getCountryFlagCode => _countryFlagCode;
 
-  void setMediaAndUrl(File media) {
-    print("========================");
-    print(media.path);
-    // _media = media.path.split('.').last;
-    // notifyListeners();
-  }
-
   String get getMedia => _media;
 
   String get getMediaUrl => _media_url;
