@@ -136,6 +136,7 @@ class _InputIncomePageState extends State<InputIncomePage> {
                         padding: const EdgeInsets.symmetric(horizontal: 20.0),
                         child: Center(
                           child: TextField(
+                            keyboardType: TextInputType.multiline,
                             onChanged: (value) {
                               setState(() {
                                 note = value;
@@ -168,7 +169,11 @@ class _InputIncomePageState extends State<InputIncomePage> {
                                   style: TextStyle(color: Colors.blue),
                                 ),
                               ),
-                              Image.file(file),
+                              Image.file(
+                                file,
+                                width: MediaQuery.of(context).size.width * 1,
+                                fit: BoxFit.fitWidth,
+                              ),
                               TextButton(
                                 onPressed: () {
                                   setState(() {

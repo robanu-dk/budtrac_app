@@ -50,9 +50,9 @@ class HistoryPage extends StatelessWidget {
           ),
           body: TabBarView(children: [
             ListView(children: [
-              TotalMoneyAndDuration(
-                  "Income & Expense", "Rp 200.000", "12/8/2021", "9/8/2022"),
-              HistoryBar(),
+              // TotalMoneyAndDuration(
+              //     "Income & Expense", "Rp 200.000", "12/8/2021", "9/8/2022"),
+              // HistoryBar(),
               Consumer<HistoryProvider>(
                 builder: (context, value, child) => Column(
                   children: value.getHistoryData.map((data) {
@@ -70,9 +70,9 @@ class HistoryPage extends StatelessWidget {
             ]),
             ListView(
               children: [
-                TotalMoneyAndDuration(
-                    "Income", "Rp 200.000", "12/8/2021", "8/8/2022"),
-                HistoryBar(),
+                // TotalMoneyAndDuration(
+                //     "Income", "Rp 200.000", "12/8/2021", "8/8/2022"),
+                // HistoryBar(),
                 Consumer<HistoryProvider>(
                   builder: (context, value, child) => Column(
                     children: value.getHistoryData
@@ -94,9 +94,9 @@ class HistoryPage extends StatelessWidget {
             ),
             ListView(
               children: [
-                TotalMoneyAndDuration(
-                    "Expense", "Rp 200.000", "1/8/2022", "9/8/2022"),
-                HistoryBar(),
+                // TotalMoneyAndDuration(
+                //     "Expense", "Rp 200.000", "1/8/2022", "9/8/2022"),
+                // HistoryBar(),
                 Consumer<HistoryProvider>(
                   builder: (context, value, child) => Column(
                     children: value.getHistoryData

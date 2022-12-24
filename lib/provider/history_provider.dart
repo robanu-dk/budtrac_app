@@ -126,6 +126,13 @@ class HistoryProvider with ChangeNotifier {
           _history_data = _data_download;
         },
       );
+
+      // Sort data by date of occurrence
+      _history_data.sort((a, b) =>
+          DateTime.parse(a['date']).compareTo(DateTime.parse(b['date'])));
+
+      // The list is reversed so get the most recent first
+      _history_data = _history_data.reversed.toList();
     } catch (error) {
       throw error;
     }

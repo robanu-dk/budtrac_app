@@ -169,7 +169,11 @@ class _InputExpensePageState extends State<InputExpensePage> {
                                   style: TextStyle(color: Colors.blue),
                                 ),
                               ),
-                              Image.file(file),
+                              Image.file(
+                                file,
+                                width: MediaQuery.of(context).size.width * 1,
+                                fit: BoxFit.fitWidth,
+                              ),
                               TextButton(
                                 onPressed: () {
                                   setState(() {
@@ -658,7 +662,7 @@ class _InputExpensePageState extends State<InputExpensePage> {
                           height: MediaQuery.of(context).size.height * 0.5,
                           child: GridView.count(
                             crossAxisCount: 4,
-                            children: category.get_category_income
+                            children: category.get_category_expense
                                 .map((data) => Card(
                                       shape: RoundedRectangleBorder(
                                         side: BorderSide(

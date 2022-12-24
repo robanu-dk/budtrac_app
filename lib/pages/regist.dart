@@ -13,10 +13,12 @@ class _RegistPageState extends State<RegistPage> {
   bool _hide1 = true;
   bool _hide2 = true;
   bool _ischecked = false;
+  bool sign = false;
   final firstName = TextEditingController();
   final lastName = TextEditingController();
   final email = TextEditingController();
   final password = TextEditingController();
+  final retypePassword = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -32,18 +34,17 @@ class _RegistPageState extends State<RegistPage> {
                     bottomLeft: Radius.circular(95),
                     bottomRight: Radius.circular(95))),
             child: Container(
-              height: MediaQuery.of(context).size.width * 1.45,
               child: Column(children: [
                 Padding(
-                  padding: const EdgeInsets.only(top: 35),
+                  padding: const EdgeInsets.only(top: 15),
                   child: Text(
                     'Create Account',
                     style: TextStyle(fontSize: 36, fontFamily: 'EBGaramond'),
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 35),
-                  child: Container(
+                  padding: const EdgeInsets.only(top: 25, bottom: 5),
+                  child: SizedBox(
                     width: MediaQuery.of(context).size.width * 0.87,
                     height: MediaQuery.of(context).size.height * 0.1,
                     child: TextField(
@@ -51,6 +52,7 @@ class _RegistPageState extends State<RegistPage> {
                       textCapitalization: TextCapitalization.sentences,
                       autocorrect: false,
                       keyboardType: TextInputType.name,
+                      textInputAction: TextInputAction.next,
                       decoration: InputDecoration(
                           label: Text('Firstname'),
                           labelStyle: TextStyle(fontSize: 16),
@@ -62,53 +64,63 @@ class _RegistPageState extends State<RegistPage> {
                     ),
                   ),
                 ),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.87,
-                  height: MediaQuery.of(context).size.height * 0.1,
-                  child: TextField(
-                    controller: lastName,
-                    textCapitalization: TextCapitalization.sentences,
-                    autocorrect: false,
-                    keyboardType: TextInputType.name,
-                    decoration: InputDecoration(
-                        label: Text('Lastname'),
-                        labelStyle: TextStyle(fontSize: 16),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.lightBlue),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(30))),
-                        prefixIcon: Icon(Icons.person_pin_sharp)),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 5),
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.87,
+                    height: MediaQuery.of(context).size.height * 0.1,
+                    child: TextField(
+                      controller: lastName,
+                      textCapitalization: TextCapitalization.sentences,
+                      autocorrect: false,
+                      keyboardType: TextInputType.name,
+                      textInputAction: TextInputAction.next,
+                      decoration: InputDecoration(
+                          label: Text('Lastname'),
+                          labelStyle: TextStyle(fontSize: 16),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.lightBlue),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(30))),
+                          prefixIcon: Icon(Icons.person_pin_sharp)),
+                    ),
                   ),
                 ),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.87,
-                  height: MediaQuery.of(context).size.height * 0.1,
-                  child: TextField(
-                    controller: email,
-                    textCapitalization: TextCapitalization.none,
-                    autocorrect: false,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: InputDecoration(
-                        label: Text('Email'),
-                        labelStyle: TextStyle(fontSize: 16),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.lightBlue),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(30))),
-                        prefixIcon: Icon(Icons.email)),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 5),
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.87,
+                    height: MediaQuery.of(context).size.height * 0.1,
+                    child: TextField(
+                      controller: email,
+                      textCapitalization: TextCapitalization.none,
+                      autocorrect: false,
+                      keyboardType: TextInputType.emailAddress,
+                      textInputAction: TextInputAction.next,
+                      decoration: InputDecoration(
+                          label: Text('Email'),
+                          labelStyle: TextStyle(fontSize: 16),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.lightBlue),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(30))),
+                          prefixIcon: Icon(Icons.email)),
+                    ),
                   ),
                 ),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.87,
-                  height: MediaQuery.of(context).size.height * 0.11,
-                  child: TextField(
-                    controller: password,
-                    maxLength: 32,
-                    textCapitalization: TextCapitalization.none,
-                    autocorrect: false,
-                    obscureText: _hide1,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: InputDecoration(
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 5),
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.87,
+                    height: MediaQuery.of(context).size.height * 0.14,
+                    child: TextField(
+                      controller: password,
+                      maxLength: 32,
+                      textCapitalization: TextCapitalization.none,
+                      autocorrect: false,
+                      obscureText: _hide1,
+                      keyboardType: TextInputType.visiblePassword,
+                      decoration: InputDecoration(
                         label: Text('Password'),
                         labelStyle: TextStyle(fontSize: 16),
                         focusedBorder: OutlineInputBorder(
@@ -117,33 +129,36 @@ class _RegistPageState extends State<RegistPage> {
                                 BorderRadius.all(Radius.circular(30))),
                         prefixIcon: Icon(Icons.key),
                         suffixIcon: IconButton(
-                            onPressed: () {
-                              setState(() {
-                                if (_hide1) {
-                                  _hide1 = false;
-                                } else {
-                                  _hide1 = true;
-                                }
-                              });
-                            },
-                            icon: Icon(
-                              Icons.remove_red_eye,
-                              color:
-                                  _hide1 ? Colors.grey[600] : Colors.pink[800],
-                            ))),
+                          onPressed: () {
+                            setState(() {
+                              if (_hide1) {
+                                _hide1 = false;
+                              } else {
+                                _hide1 = true;
+                              }
+                            });
+                          },
+                          icon: Icon(
+                            Icons.remove_red_eye,
+                            color: _hide1 ? Colors.grey[600] : Colors.pink[800],
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 5),
-                  child: Container(
+                  padding: const EdgeInsets.all(0),
+                  child: SizedBox(
                     width: MediaQuery.of(context).size.width * 0.87,
-                    height: MediaQuery.of(context).size.height * 0.11,
+                    height: MediaQuery.of(context).size.height * 0.14,
                     child: TextField(
+                      controller: retypePassword,
                       maxLength: 32,
                       textCapitalization: TextCapitalization.none,
                       autocorrect: false,
                       obscureText: _hide2,
-                      keyboardType: TextInputType.emailAddress,
+                      keyboardType: TextInputType.visiblePassword,
                       decoration: InputDecoration(
                         label: Text('Retype Password'),
                         labelStyle: TextStyle(fontSize: 16),
@@ -172,7 +187,7 @@ class _RegistPageState extends State<RegistPage> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 10, top: 5),
+                  padding: const EdgeInsets.only(left: 20),
                   child: Row(
                     children: [
                       Checkbox(
@@ -191,35 +206,81 @@ class _RegistPageState extends State<RegistPage> {
                     ],
                   ),
                 ),
-                Card(
-                  shape: RoundedRectangleBorder(
-                      side: BorderSide(color: Colors.pink.shade800),
-                      borderRadius: BorderRadius.all(Radius.circular(50))),
-                  shadowColor: Colors.white,
-                  child: Container(
-                    width: 200,
-                    child: TextButton(
-                      onPressed: () {
-                        regist.regist(firstName.text, lastName.text, email.text,
-                            password.text);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text("Registration Success!!"),
-                            duration: Duration(seconds: 2),
+                sign
+                    ? Padding(
+                        padding: const EdgeInsets.only(bottom: 8),
+                        child: SizedBox(
+                          width: 56,
+                          height: 56,
+                          child: RefreshProgressIndicator(
+                            strokeWidth: 3,
+                            color: Colors.pink[800],
                           ),
-                        );
-                        Navigator.pop(context);
-                      },
-                      child: Text(
-                        'Sign up',
-                        style: TextStyle(
-                          color: Colors.pink[800],
-                          fontSize: 20,
                         ),
-                      ),
-                    ),
-                  ),
-                )
+                      )
+                    : Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                              side: BorderSide(color: Colors.pink.shade800),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(50))),
+                          shadowColor: Colors.white,
+                          child: Container(
+                            width: 200,
+                            child: TextButton(
+                              onPressed: () {
+                                signStatChange();
+                                Future.delayed(Duration(seconds: 1), () {
+                                  if (_ischecked &&
+                                      firstName.text != "" &&
+                                      email.text != "" &&
+                                      password.text != "" &&
+                                      retypePassword.text != "") {
+                                    if (password.text == retypePassword.text) {
+                                      regist
+                                          .regist(firstName.text, lastName.text,
+                                              email.text, password.text)
+                                          .then((value) {
+                                        if (value == "") {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                "Registration Success!!",
+                                              ),
+                                              duration: Duration(seconds: 2),
+                                            ),
+                                          );
+                                          Navigator.pop(context);
+                                        } else {
+                                          failedRegistDialog(context, value);
+                                        }
+                                      });
+                                    } else if (!_ischecked) {
+                                      failedRegistDialog(context,
+                                          "Agree with the terms & conditions should be checked");
+                                    } else {
+                                      failedRegistDialog(context,
+                                          "Password and Retype Password must be same");
+                                    }
+                                  } else {
+                                    failedRegistDialog(context,
+                                        "The Firstname, Email, Password and Retype Password fields cannot be empty.");
+                                  }
+                                });
+                              },
+                              child: Text(
+                                'Sign up',
+                                style: TextStyle(
+                                  color: Colors.pink[800],
+                                  fontSize: 20,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
               ]),
             ),
           ),
@@ -256,6 +317,31 @@ class _RegistPageState extends State<RegistPage> {
                 ),
               )
             ],
+          )
+        ],
+      ),
+    );
+  }
+
+  void signStatChange() {
+    return setState(() {
+      sign = !sign;
+    });
+  }
+
+  Future<dynamic> failedRegistDialog(BuildContext context, String content) {
+    signStatChange();
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("Sign Up Failed!!"),
+        content: Text(content),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text("Try Again"),
           )
         ],
       ),

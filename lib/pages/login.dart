@@ -16,6 +16,7 @@ class LoginPage extends StatefulWidget {
 class _MyWidgetState extends State<LoginPage> {
   Color icon_eye_color = Colors.grey;
   bool hide = true;
+  bool login = false;
   final email = TextEditingController();
   final password = TextEditingController();
 
@@ -56,7 +57,7 @@ class _MyWidgetState extends State<LoginPage> {
                       topLeft: Radius.circular(95),
                       topRight: Radius.circular(95))),
               child: Container(
-                height: 550,
+                // height: 550,
                 child: Column(children: [
                   Padding(
                     padding: EdgeInsets.only(top: 35),
@@ -72,6 +73,8 @@ class _MyWidgetState extends State<LoginPage> {
                     padding: EdgeInsets.only(
                         top: 30, bottom: 20, left: 40, right: 40),
                     child: TextField(
+                      keyboardType: TextInputType.emailAddress,
+                      textInputAction: TextInputAction.next,
                       controller: email,
                       autocorrect: false,
                       decoration: InputDecoration(
@@ -84,6 +87,12 @@ class _MyWidgetState extends State<LoginPage> {
                   Padding(
                     padding: EdgeInsets.only(bottom: 20, left: 40, right: 40),
                     child: TextField(
+                      onSubmitted: (_) {
+                        setState(() {
+                          login = true;
+                        });
+                        loginFunction(context);
+                      },
                       controller: password,
                       autocorrect: false,
                       obscureText: hide,
@@ -113,53 +122,51 @@ class _MyWidgetState extends State<LoginPage> {
                       ),
                     ),
                   ),
-                  Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(40))),
-                    color: Colors.pink[800],
-                    child: TextButton(
-                      onPressed: () {
-                        Provider.of<User>(context, listen: false)
-                            .login(email.text, password.text)
-                            .then(
-                          (error) {
-                            return (error != '')
-                                ? showDialog(
-                                    context: context,
-                                    builder: (context) => AlertDialog(
-                                      title: Text('Login Failed'),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () =>
-                                              Navigator.of(context).pop(),
-                                          child: Text('Try Again'),
-                                        )
-                                      ],
-                                    ),
-                                  )
-                                : null;
-                          },
-                        );
-                        // showDialog(
-                        //   context: context,
-                        //   builder: (context) => GFLoader(
-                        //     type: GFLoaderType.android,
-                        //     size: 100,
-                        //   ),
-                        // );
-                      },
-                      child: Container(
-                        height: 30,
-                        width: 300,
-                        child: Center(
-                          child: Text(
-                            "Log in",
-                            style: TextStyle(color: Colors.white, fontSize: 20),
+                  login
+                      ? Container(
+                          height: 56,
+                          width: 56,
+                          child: RefreshProgressIndicator(
+                            backgroundColor: Colors.pink[800],
+                            color: Colors.white,
+                            strokeWidth: 4,
+                          ),
+                        )
+                      : Card(
+                          shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(40))),
+                          color: Colors.pink[800],
+                          child: TextButton(
+                            onPressed: () {
+                              setState(() {
+                                login = true;
+                              });
+                              Future.delayed(Duration(seconds: 1), () {
+                                loginFunction(context);
+                              });
+                              // loginFunction(context);
+                              // showDialog(
+                              //   context: context,
+                              //   builder: (context) => GFLoader(
+                              //     type: GFLoaderType.android,
+                              //     size: 100,
+                              //   ),
+                              // );
+                            },
+                            child: Container(
+                              height: 30,
+                              width: 300,
+                              child: Center(
+                                child: Text(
+                                  "Log in",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 20),
+                                ),
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
-                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -193,30 +200,33 @@ class _MyWidgetState extends State<LoginPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                     ),
                   ),
-                  Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(40)),
-                        side: BorderSide(color: Colors.grey.shade300)),
-                    color: Colors.white,
-                    child: TextButton(
-                      onPressed: () {},
-                      child: Container(
-                        height: 30,
-                        width: 300,
-                        child: Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset('images/icon google.png'),
-                              Padding(
-                                padding: EdgeInsets.only(left: 10),
-                                child: Text(
-                                  "Google",
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 20),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 14.0),
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(40)),
+                          side: BorderSide(color: Colors.grey.shade300)),
+                      color: Colors.white,
+                      child: TextButton(
+                        onPressed: () {},
+                        child: Container(
+                          height: 30,
+                          width: 300,
+                          child: Center(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset('images/icon google.png'),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 10),
+                                  child: Text(
+                                    "Google",
+                                    style: TextStyle(
+                                        color: Colors.black, fontSize: 20),
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -228,6 +238,32 @@ class _MyWidgetState extends State<LoginPage> {
           )
         ],
       ),
+    );
+  }
+
+  void loginFunction(BuildContext context) {
+    Provider.of<User>(context, listen: false)
+        .login(email.text, password.text)
+        .then(
+      (error) {
+        if (error != '') {
+          setState(() {
+            login = false;
+          });
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text('Login Failed'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text('Try Again'),
+                )
+              ],
+            ),
+          );
+        }
+      },
     );
   }
 }

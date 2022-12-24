@@ -46,6 +46,7 @@ dependencies:
   firebase_core: ^2.3.0
   firebase_auth: ^4.1.5
   firebase_storage: ^11.0.6
+  another_flushbar: ^1.12.29 # Look's like scaffoldMessenger snackbar
 
 dev_dependencies:
   flutter_test:

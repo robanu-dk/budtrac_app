@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../provider/history_provider.dart';
@@ -23,7 +24,8 @@ class History extends StatelessWidget {
         ),
       ),
       title: Text(data['category']),
-      subtitle: Text(data['date']),
+      subtitle: Text(
+          "${DateFormat.yMMMMd("en_us").format(DateTime.parse(data['date']))}"),
       trailing: Text(
         (data["income"] ? '+ ' : '- ') +
             '${data["currency"]} ${data["nominal"]}',

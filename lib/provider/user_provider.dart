@@ -147,8 +147,8 @@ class User with ChangeNotifier {
     return null;
   }
 
-  Future<void> postData(
-      String firstName, String lastName, String email, String password) async {
+  Future<void> postData(String firstName, String lastName, String email,
+      String password, String token) async {
     await http.post(
       Uri.parse(
           'https://bud-track-4652c-default-rtdb.firebaseio.com/user.json?auth=$token'),
@@ -206,7 +206,7 @@ class User with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> regist(
+  Future<String> regist(
       String firstName, String lastName, String email, String password) async {
     Uri url = Uri.parse(
         'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAEA_PvRUC0fHLcH6S_XRUJos_B5RQ7mXI');
@@ -227,18 +227,20 @@ class User with ChangeNotifier {
         throw responseBody['error']['message'];
       }
 
-      _tempUserId = responseBody["localId"];
-      _tempIdToken = responseBody["idToken"];
-      _tempExpireTime = DateTime.now().add(
-        Duration(
-          seconds: int.parse(responseBody["expiresIn"]),
-        ),
-      );
-      tempData();
-      postData(firstName, lastName, email, password);
+// Auto login after register account:
+      // _tempUserId = responseBody["localId"];
+      // _tempIdToken = responseBody["idToken"];
+      // _tempExpireTime = DateTime.now().add(
+      //   Duration(
+      //     seconds: int.parse(responseBody["expiresIn"]),
+      //   ),
+      // );
+      // tempData();
+      postData(firstName, lastName, email, password, responseBody["idToken"]);
     } catch (error) {
-      throw error;
+      return error.toString().replaceAll("_", " ").toLowerCase();
     }
+    return '';
   }
 
   Future<String> login(String email, String password) async {

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -89,18 +90,17 @@ class SaveData extends StatelessWidget {
               });
             }
 
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text("Save Successfull!!"),
-                duration: Duration(seconds: 2),
-              ),
-            );
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                 builder: (context) => Homepage(),
               ),
             );
+            Flushbar(
+              message: "Save Successfull!!",
+              duration: Duration(seconds: 3),
+              flushbarPosition: FlushbarPosition.TOP,
+            ).show(context);
           },
           child: Text('Yes'),
         )
