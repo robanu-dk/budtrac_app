@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 
-import './splash.dart';
 import '../navigation/bottom_navigation.dart';
 import '../provider/user_provider.dart';
 import '../widget/profileImage.dart';
@@ -521,19 +520,22 @@ class _ProfilePageState extends State<ProfilePage> {
                             title: Text("Logout?"),
                             actions: [
                               TextButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
                                 child: Text("Cancel"),
                               ),
                               TextButton(
                                 onPressed: () {
-                                  user.logout().then(
-                                        (value) => Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => SplashPage(),
-                                          ),
-                                        ),
-                                      );
+                                  user.logout(context);
+                                  // user.logout(context).then(
+                                  //       (value) => Navigator.pushReplacement(
+                                  //         context,
+                                  //         MaterialPageRoute(
+                                  //           builder: (context) => SplashPage(),
+                                  //         ),
+                                  //       ),
+                                  //     );
                                 },
                                 child: Text(
                                   "Yes",

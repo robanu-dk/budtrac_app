@@ -1,7 +1,10 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:moneytracker/pages/splash.dart';
 
 class User with ChangeNotifier {
   String _firstName = '',
@@ -15,7 +18,7 @@ class User with ChangeNotifier {
       // _email_sementara = '',
       _phone_number_sementara = '';
 
-  var _idToken, _userId;
+  var _idToken, _userId, _timer;
   DateTime _expireTime = DateTime.now();
 
   var _tempIdToken, _tempUserId;
@@ -62,6 +65,8 @@ class User with ChangeNotifier {
   String get getEmail => _email;
 
   String get getPhoneNumber => _phone_number;
+
+  bool get isAuth => _idToken != null;
 
   void updateData() async {
     var _key;
@@ -279,9 +284,19 @@ class User with ChangeNotifier {
     return '';
   }
 
-  Future<void> logout() async {
-    _tempUserId = null;
-    _tempIdToken = null;
-    tempData();
+  Future<void> logout(context) async {
+    _userId = null;
+    _idToken = null;
+    notifyListeners();
+    Navigator.of(context).pushReplacement(MaterialPageRoute(
+      builder: (context) => SplashPage(),
+    ));
   }
+
+  // void autoLogout(context) {
+  //   if (_timer != null) {
+  //     _timer.cancel();
+  //   }
+  //   _timer = Timer(Duration(seconds: 20), () => logout(context));
+  // }
 }

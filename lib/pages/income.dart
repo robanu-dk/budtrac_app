@@ -36,13 +36,12 @@ class _InputIncomePageState extends State<InputIncomePage> {
 
   DateTime date = DateTime.now();
 
-  String note = '';
-
   FirebaseStorageController controller = FirebaseStorageController();
 
   late File file;
   bool uploadFile = false;
   TextEditingController nominal = TextEditingController();
+  TextEditingController note = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -131,21 +130,18 @@ class _InputIncomePageState extends State<InputIncomePage> {
                     ),
                     child: SizedBox(
                       width: MediaQuery.of(context).size.width * 0.93,
-                      height: 60.0,
+                      // height: 60.0,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20.0),
                         child: Center(
                           child: TextField(
+                            controller: note,
                             keyboardType: TextInputType.multiline,
-                            onChanged: (value) {
-                              setState(() {
-                                note = value;
-                              });
-                            },
+                            maxLines: null,
                             style: TextStyle(fontSize: 14),
                             decoration: InputDecoration(
                               border: InputBorder.none,
-                              label: Text("Description"),
+                              label: Text("Note"),
                             ),
                           ),
                         ),
@@ -195,7 +191,7 @@ class _InputIncomePageState extends State<InputIncomePage> {
                                     chosen_category: chosen_category,
                                     purchase: purchase,
                                     file: file,
-                                    note: note,
+                                    note: note.text,
                                     date: date,
                                   ),
                                 ),
@@ -212,7 +208,7 @@ class _InputIncomePageState extends State<InputIncomePage> {
                               nominal: nominal.text,
                               chosen_category: chosen_category,
                               purchase: purchase,
-                              note: note,
+                              note: note.text,
                               date: date,
                             ),
                           ),

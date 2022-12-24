@@ -37,9 +37,9 @@ class _InputExpensePageState extends State<InputExpensePage> {
   );
   String purchase = "Transfer";
   DateTime date = DateTime.now();
-  String note = "";
 
   TextEditingController nominal = TextEditingController();
+  TextEditingController note = TextEditingController();
 
   late File file;
   bool uploadFile = false;
@@ -132,20 +132,18 @@ class _InputExpensePageState extends State<InputExpensePage> {
                     ),
                     child: SizedBox(
                       width: MediaQuery.of(context).size.width * 0.93,
-                      height: 60.0,
+                      // height: 60.0,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20.0),
                         child: Center(
                           child: TextField(
-                            onChanged: (value) {
-                              setState(() {
-                                note = value;
-                              });
-                            },
+                            controller: note,
+                            keyboardType: TextInputType.multiline,
+                            maxLines: null,
                             style: TextStyle(fontSize: 14),
                             decoration: InputDecoration(
                               border: InputBorder.none,
-                              label: Text("Description"),
+                              label: Text("Note"),
                             ),
                           ),
                         ),
@@ -195,7 +193,7 @@ class _InputExpensePageState extends State<InputExpensePage> {
                                     chosen_category: chosen_category,
                                     purchase: purchase,
                                     file: file,
-                                    note: note,
+                                    note: note.text,
                                     date: date,
                                   ),
                                 ),
@@ -212,7 +210,7 @@ class _InputExpensePageState extends State<InputExpensePage> {
                               nominal: nominal.text,
                               chosen_category: chosen_category,
                               purchase: purchase,
-                              note: note,
+                              note: note.text,
                               date: date,
                             ),
                           ),

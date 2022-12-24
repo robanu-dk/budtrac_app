@@ -142,6 +142,10 @@ class HistoryProvider with ChangeNotifier {
   void updateData(token, uid) {
     _token = token;
     _userId = uid;
+
+    // Clean _history_data
+    _history_data = [];
+
     notifyListeners();
   }
 }
