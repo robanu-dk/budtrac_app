@@ -257,13 +257,13 @@ class _RegistPageState extends State<RegistPage> {
                                           failedRegistDialog(context, value);
                                         }
                                       });
-                                    } else if (!_ischecked) {
-                                      failedRegistDialog(context,
-                                          "Agree with the terms & conditions should be checked");
                                     } else {
                                       failedRegistDialog(context,
                                           "Password and Retype Password must be same");
                                     }
+                                  } else if (!_ischecked) {
+                                    failedRegistDialog(context,
+                                        "Agree with the terms & conditions should be checked");
                                   } else {
                                     failedRegistDialog(context,
                                         "The Firstname, Email, Password and Retype Password fields cannot be empty.");
