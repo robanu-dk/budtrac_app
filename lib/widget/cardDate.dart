@@ -54,7 +54,7 @@ class CardDate extends StatelessWidget {
                     Icons.calendar_month_outlined,
                     size: 28,
                   ),
-                  Text(" Date Start"),
+                  Text(" Date ${isStart ? 'Start' : 'End'}"),
                 ],
               ),
               Padding(
