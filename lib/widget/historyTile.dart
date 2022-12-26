@@ -36,7 +36,7 @@ class History extends StatelessWidget {
       onTap: () {
         showDialog(
           context: context,
-          builder: (context) => DetailHistory(data, category_image),
+          builder: (context) => DetailHistory(data),
         );
       },
       // onLongPress: () {},

@@ -84,4 +84,22 @@ class FirebaseStorageController extends GetxController {
       throw error;
     }
   }
+
+  Future<String> updateAttachmentHistory(String ref, File file) async {
+    if (ref != "") {
+      await deleteImage(ref);
+    }
+
+    late String mediaUrl;
+    String newRef = "${ref.split('.').first}.${file.path.split('.').last}";
+
+    await _storage.ref(newRef).putFile(file);
+
+    await _storage
+        .ref(newRef)
+        .getDownloadURL()
+        .then((value) => mediaUrl = value);
+
+    return "$newRef+$mediaUrl";
+  }
 }

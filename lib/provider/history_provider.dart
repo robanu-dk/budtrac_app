@@ -108,34 +108,40 @@ class HistoryProvider with ChangeNotifier {
 
   void downloadHistoryData() async {
     List<Map<String, dynamic>> _data_download = [];
-    try {
-      await http
-          .get(
-        Uri.parse(
-          "https://bud-track-4652c-default-rtdb.firebaseio.com/money.json?auth=$_token",
-        ),
-      )
-          .then(
-        (value) {
-          final responseBody = jsonDecode(value.body) as Map<String, dynamic>;
+
+    await http
+        .get(
+      Uri.parse(
+        "https://bud-track-4652c-default-rtdb.firebaseio.com/money.json?auth=$_token",
+      ),
+    )
+        .then(
+      (value) {
+        final responseBody = jsonDecode(value.body);
+        if (responseBody != null) {
           responseBody.forEach((key, value) {
             if (value['idUser'] == _userId) {
+              // add key as value id
+              value['id'] = key;
+
               _data_download.add(value);
             }
           });
-          _history_data = _data_download;
-        },
-      );
+        }
 
+        _history_data = _data_download;
+      },
+    );
+
+    if (_history_data.length != 0) {
       // Sort data by date of occurrence
       _history_data.sort((a, b) =>
           DateTime.parse(a['date']).compareTo(DateTime.parse(b['date'])));
 
       // The list is reversed so get the most recent first
       _history_data = _history_data.reversed.toList();
-    } catch (error) {
-      throw error;
     }
+
     notifyListeners();
   }
 
@@ -147,5 +153,53 @@ class HistoryProvider with ChangeNotifier {
     _history_data = [];
 
     notifyListeners();
+  }
+
+  Future<void> deleteHistory(String key) async {
+    try {
+      await http.delete(
+        Uri.parse(
+          "https://bud-track-4652c-default-rtdb.firebaseio.com/money/$key.json?auth=$_token",
+        ),
+      );
+
+      downloadHistoryData();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  void updateDataHistory(
+    Map<String, dynamic> data,
+    String nominal,
+    var date,
+    var category,
+    var wallet,
+    String media,
+    String mediaUrl,
+    String note,
+  ) async {
+    try {
+      Map<String, dynamic> dataBaru = {
+        'nominal': nominal == "" ? data['nominal'] : nominal,
+        'date': date == null ? data['date'] : date.toString(),
+        'category': category == null ? data['category'] : category['name'],
+        'wallet': wallet == null ? data['wallet'] : wallet,
+        'media': media,
+        'mediaUrl': mediaUrl,
+        'note': note == '' ? data['note'] : note,
+      };
+
+      await http.patch(
+        Uri.parse(
+          "https://bud-track-4652c-default-rtdb.firebaseio.com/money/${data['id']}.json?auth=$_token",
+        ),
+        body: jsonEncode(dataBaru),
+      );
+
+      downloadHistoryData();
+    } catch (error) {
+      throw error;
+    }
   }
 }
