@@ -57,7 +57,7 @@ class _DetailHistoryState extends State<DetailHistory> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      insetPadding: EdgeInsets.all(8.0),
+      insetPadding: EdgeInsets.all(5.0),
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -334,60 +334,62 @@ class _DetailHistoryState extends State<DetailHistory> {
                             // if (widget.data['media'] != "") {
                             //   await controller.deleteImage(widget.data['media']);
                             // }
-                            await controller.deleteImage(widget.data['media']);
-                            media = '';
-                            mediaUrl = '';
+                            // await controller.deleteImage(widget.data['media']);
+                            controller.deleteImage(widget.data['media']);
+                            saveChanges(context, "", "");
                           } else if (uploadFile) {
                             if (widget.data['media'] == "") {
                               await controller
                                   .uploadImage(
                                       "Money", widget.data['idUser'], file)
                                   .then((value) {
-                                media = value.split('+').first;
-                                mediaUrl = value.split('+').last;
+                                saveChanges(context, value.split('+').first,
+                                    value.split('+').last);
                               });
                             } else {
                               await controller
                                   .updateAttachmentHistory(
                                       widget.data['media'], file)
                                   .then((value) {
-                                media = value.split('+').first;
-                                mediaUrl = value.split('+').last;
+                                saveChanges(context, value.split('+').first,
+                                    value.split('+').last);
                               });
                             }
                           } else {
-                            media = widget.data['media'];
-                            mediaUrl = widget.data['mediaUrl'];
+                            saveChanges(context, widget.data['media'],
+                                widget.data['mediaUrl']);
                           }
 
-                          Provider.of<HistoryProvider>(context, listen: false)
-                              .updateDataHistory(
-                            widget.data,
-                            nominal.text,
-                            this.date,
-                            this.chosen_category,
-                            this.purchase,
-                            media,
-                            mediaUrl,
-                            note.text,
-                          );
+                          // Provider.of<HistoryProvider>(context, listen: false)
+                          //     .updateDataHistory(
+                          //   widget.data,
+                          //   nominal.text,
+                          //   this.date,
+                          //   this.chosen_category,
+                          //   this.purchase,
+                          //   media,
+                          //   mediaUrl,
+                          //   note.text,
+                          // );
 
                           setState(() {
                             edit = false;
                             deleteAttachment = false;
                           });
                           Navigator.of(context).pop();
+
+                          Navigator.of(context).pop();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text("Save Successfully!!"),
+                              duration: Duration(seconds: 3),
+                            ),
+                          );
                         },
                         child: Text("Yes")),
                   ],
                 ),
-              ).then((_) {
-                Navigator.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text("Save Successfully!!"),
-                  duration: Duration(seconds: 3),
-                ));
-              });
+              );
             } else {
               setState(() {
                 edit = true;
@@ -459,6 +461,19 @@ class _DetailHistoryState extends State<DetailHistory> {
           ],
         ),
       ),
+    );
+  }
+
+  void saveChanges(BuildContext context, String media, String mediaUrl) {
+    Provider.of<HistoryProvider>(context, listen: false).updateDataHistory(
+      widget.data,
+      nominal.text,
+      this.date,
+      this.chosen_category,
+      this.purchase,
+      media,
+      mediaUrl,
+      note.text,
     );
   }
 
@@ -758,6 +773,7 @@ class _DetailHistoryState extends State<DetailHistory> {
       // Change uploadFile status
       setState(() {
         uploadFile = true;
+        deleteAttachment = false;
       });
 
       // Pop context
